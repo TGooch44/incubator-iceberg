@@ -20,16 +20,18 @@ from enum import Enum, unique
 
 @unique
 class FileFormat(Enum):
-
-    ORC = "orc"
-    PARQUET = "parquet"
-    AVRO = "avro"
+    ORC = "orc", True
+    PARQUET = "parquet", True
+    AVRO = "avro", True
 
     def add_extension(self, filename):
-        if filename.endswith(self.value):
+        if filename.endswith(self.value[0]):
             return filename
         else:
-            return filename + "." + self.value
+            return filename + "." + self.value[0]
+
+    def is_splittable(self):
+        return self.value[1]
 
     @staticmethod
     def from_file_name(filename):
@@ -38,5 +40,5 @@ class FileFormat(Enum):
             return None
         ext = filename[last_index_of + 1:]
         for fmt in FileFormat:
-            if ext == fmt.value:
+            if ext == fmt.value[0]:
                 return fmt

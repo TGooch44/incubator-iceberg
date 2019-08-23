@@ -15,26 +15,23 @@
 # specific language governing permissions and limitations
 # under the License.
 
+from copy import deepcopy
 
-__all__ = ["AtomicInteger",
-           "METAFLOW_ENABLED",
-           "METAFLOW_ROOTDIR",
-           "PackingIterator",
-           "PLANNER_THREAD_POOL_SIZE_PROP",
-           "SCAN_THREAD_POOL_ENABLED",
-           "str_as_bool",
-           "WORKER_THREAD_POOL_SIZE_PROP",
-           ]
-
-from .atomic_integer import AtomicInteger
-from .bin_packing import PackingIterator
-
-PLANNER_THREAD_POOL_SIZE_PROP = "iceberg.planner.num-threads"
-WORKER_THREAD_POOL_SIZE_PROP = "iceberg.worker.num-threads"
-SCAN_THREAD_POOL_ENABLED = "iceberg.scan.plan-in-worker-pool"
-METAFLOW_ENABLED = "iceberg.s3.use-metaflow"
-METAFLOW_ROOTDIR = "iceberg.s3.metaflow-root-dir"
+from iceberg.api import CombinedScanTask
 
 
-def str_as_bool(str_var):
-    return str_var is not None and str_var.lower() == "true"
+class BaseCombinedScanTask(CombinedScanTask):
+
+    def __init__(self, tasks):
+        self.tasks = deepcopy(tasks)
+
+    @property
+    def files(self):
+        return self.tasks
+
+    def __repr__(self):
+        return "BaseCombinedScanTask([{}])".format(self.tasks)
+
+    def __str__(self):
+        total_size = sum([task.length for task in self.tasks])
+        return "BaseCombinedScanTask(num_tasks={}, total_size={})".format(len(self.tasks), total_size)
