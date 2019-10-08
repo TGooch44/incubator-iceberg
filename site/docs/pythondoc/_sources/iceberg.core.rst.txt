@@ -1,0 +1,255 @@
+iceberg.core package
+====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   iceberg.core.avro
+   iceberg.core.filesystem
+   iceberg.core.util
+
+Submodules
+----------
+
+iceberg.core.base\_combined\_scan\_task module
+----------------------------------------------
+
+.. automodule:: iceberg.core.base_combined_scan_task
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.base\_file\_scan\_task module
+------------------------------------------
+
+.. automodule:: iceberg.core.base_file_scan_task
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.base\_metastore\_table\_operations module
+------------------------------------------------------
+
+.. automodule:: iceberg.core.base_metastore_table_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.base\_metastore\_tables module
+-------------------------------------------
+
+.. automodule:: iceberg.core.base_metastore_tables
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.base\_snapshot module
+----------------------------------
+
+.. automodule:: iceberg.core.base_snapshot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.base\_table module
+-------------------------------
+
+.. automodule:: iceberg.core.base_table
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.base\_table\_scan module
+-------------------------------------
+
+.. automodule:: iceberg.core.base_table_scan
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.base\_transaction module
+-------------------------------------
+
+.. automodule:: iceberg.core.base_transaction
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.config\_properties module
+--------------------------------------
+
+.. automodule:: iceberg.core.config_properties
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.data\_files module
+-------------------------------
+
+.. automodule:: iceberg.core.data_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.data\_table\_scan module
+-------------------------------------
+
+.. automodule:: iceberg.core.data_table_scan
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.filtered\_manifest module
+--------------------------------------
+
+.. automodule:: iceberg.core.filtered_manifest
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.generic\_data\_file module
+---------------------------------------
+
+.. automodule:: iceberg.core.generic_data_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.generic\_manifest\_file module
+-------------------------------------------
+
+.. automodule:: iceberg.core.generic_manifest_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.generic\_partition\_field\_summary module
+------------------------------------------------------
+
+.. automodule:: iceberg.core.generic_partition_field_summary
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.manifest\_entry module
+-----------------------------------
+
+.. automodule:: iceberg.core.manifest_entry
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.manifest\_list\_writer module
+------------------------------------------
+
+.. automodule:: iceberg.core.manifest_list_writer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.manifest\_reader module
+------------------------------------
+
+.. automodule:: iceberg.core.manifest_reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.partition\_data module
+-----------------------------------
+
+.. automodule:: iceberg.core.partition_data
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.partition\_spec\_parser module
+-------------------------------------------
+
+.. automodule:: iceberg.core.partition_spec_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.partition\_summary module
+--------------------------------------
+
+.. automodule:: iceberg.core.partition_summary
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.scan\_summary module
+---------------------------------
+
+.. automodule:: iceberg.core.scan_summary
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.schema\_parser module
+----------------------------------
+
+.. automodule:: iceberg.core.schema_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.schema\_update module
+----------------------------------
+
+.. automodule:: iceberg.core.schema_update
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.snapshot\_parser module
+------------------------------------
+
+.. automodule:: iceberg.core.snapshot_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.table\_metadata module
+-----------------------------------
+
+.. automodule:: iceberg.core.table_metadata
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.table\_metadata\_parser module
+-------------------------------------------
+
+.. automodule:: iceberg.core.table_metadata_parser
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.table\_operations module
+-------------------------------------
+
+.. automodule:: iceberg.core.table_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.table\_properties module
+-------------------------------------
+
+.. automodule:: iceberg.core.table_properties
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: iceberg.core
+   :members:
+   :undoc-members:
+   :show-inheritance:

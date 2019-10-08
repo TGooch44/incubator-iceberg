@@ -1,0 +1,914 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.types.types &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../types.html">iceberg.api.types</a> &raquo;</li>
+        
+      <li>iceberg.api.types.types</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.api.types.types</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">from</span> <span class="nn">.type</span> <span class="k">import</span> <span class="p">(</span><span class="n">NestedType</span><span class="p">,</span>
+                   <span class="n">PrimitiveType</span><span class="p">,</span>
+                   <span class="n">TypeID</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BooleanType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.BooleanType">[docs]</a><span class="k">class</span> <span class="nc">BooleanType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="BooleanType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.BooleanType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">BooleanType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">BooleanType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">BooleanType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">BooleanType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Boolean Types created&quot;</span><span class="p">)</span>
+        <span class="n">BooleanType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">BOOLEAN</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;boolean&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;boolean&quot;</span></div>
+
+
+<div class="viewcode-block" id="IntegerType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.IntegerType">[docs]</a><span class="k">class</span> <span class="nc">IntegerType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="IntegerType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.IntegerType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">IntegerType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">IntegerType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">IntegerType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">IntegerType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Integer Types created&quot;</span><span class="p">)</span>
+        <span class="n">IntegerType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">INTEGER</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;int&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;int&quot;</span></div>
+
+
+<div class="viewcode-block" id="LongType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.LongType">[docs]</a><span class="k">class</span> <span class="nc">LongType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="LongType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.LongType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">LongType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">LongType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">LongType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">LongType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Long Types created&quot;</span><span class="p">)</span>
+        <span class="n">LongType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">LONG</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;long&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;long&quot;</span></div>
+
+
+<div class="viewcode-block" id="FloatType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.FloatType">[docs]</a><span class="k">class</span> <span class="nc">FloatType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="FloatType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.FloatType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">FloatType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">FloatType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">FloatType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">FloatType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Float Types created&quot;</span><span class="p">)</span>
+        <span class="n">FloatType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">FLOAT</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;float&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;float&quot;</span></div>
+
+
+<div class="viewcode-block" id="DoubleType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.DoubleType">[docs]</a><span class="k">class</span> <span class="nc">DoubleType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="DoubleType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.DoubleType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">DoubleType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">DoubleType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">DoubleType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">DoubleType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Double Types created&quot;</span><span class="p">)</span>
+        <span class="n">DoubleType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DOUBLE</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;double&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;double&quot;</span></div>
+
+
+<div class="viewcode-block" id="DateType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.DateType">[docs]</a><span class="k">class</span> <span class="nc">DateType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="DateType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.DateType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">DateType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">DateType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">DateType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">DateType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Date Types created&quot;</span><span class="p">)</span>
+        <span class="n">DateType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DATE</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;date&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;date&quot;</span></div>
+
+
+<div class="viewcode-block" id="TimeType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.TimeType">[docs]</a><span class="k">class</span> <span class="nc">TimeType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TimeType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.TimeType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">TimeType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">TimeType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">TimeType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">TimeType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Time Types created&quot;</span><span class="p">)</span>
+        <span class="n">TimeType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">TIME</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;time&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;time&quot;</span></div>
+
+
+<div class="viewcode-block" id="TimestampType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.TimestampType">[docs]</a><span class="k">class</span> <span class="nc">TimestampType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance_with_tz</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">__instance_without_tz</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="TimestampType.with_timezone"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.TimestampType.with_timezone">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">with_timezone</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">TimestampType</span><span class="o">.</span><span class="n">__instance_with_tz</span><span class="p">:</span>
+            <span class="n">TimestampType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">TimestampType</span><span class="o">.</span><span class="n">__instance_with_tz</span></div>
+
+<div class="viewcode-block" id="TimestampType.without_timezone"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.TimestampType.without_timezone">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">without_timezone</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">TimestampType</span><span class="o">.</span><span class="n">__instance_without_tz</span><span class="p">:</span>
+            <span class="n">TimestampType</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TimestampType</span><span class="o">.</span><span class="n">__instance_without_tz</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_timezone</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjust_to_utc</span> <span class="o">=</span> <span class="n">with_timezone</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">with_timezone</span> <span class="ow">and</span> <span class="n">TimestampType</span><span class="o">.</span><span class="n">__instance_with_tz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span>\
+                <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">with_timezone</span> <span class="ow">and</span> <span class="n">TimestampType</span><span class="o">.</span><span class="n">__instance_without_tz</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Timestamp Types created&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">with_timezone</span><span class="p">:</span>
+            <span class="n">TimestampType</span><span class="o">.</span><span class="n">__instance_with_tz</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">TimestampType</span><span class="o">.</span><span class="n">__instance_without_tz</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">TIMESTAMP</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">TimestampType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjust_to_utc</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">adjust_to_utc</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__key</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TimestampType</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjust_to_utc</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">adjust_to_utc</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;timestamptz&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;timestamp&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="StringType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StringType">[docs]</a><span class="k">class</span> <span class="nc">StringType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="StringType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StringType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">StringType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">StringType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">StringType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">StringType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple String Types created&quot;</span><span class="p">)</span>
+        <span class="n">StringType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">STRING</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;string&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;string&quot;</span></div>
+
+
+<div class="viewcode-block" id="UUIDType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.UUIDType">[docs]</a><span class="k">class</span> <span class="nc">UUIDType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="UUIDType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.UUIDType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">UUIDType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">UUIDType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">UUIDType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">UUIDType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple UUID Types created&quot;</span><span class="p">)</span>
+        <span class="n">UUIDType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">UUID</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;uuid&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;uuid&quot;</span></div>
+
+
+<div class="viewcode-block" id="FixedType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.FixedType">[docs]</a><span class="k">class</span> <span class="nc">FixedType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FixedType.of_length"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.FixedType.of_length">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">of_length</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FixedType</span><span class="p">(</span><span class="n">length</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
+
+<div class="viewcode-block" id="FixedType.length"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.FixedType.length">[docs]</a>    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">FIXED</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__key</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">FixedType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">length</span>
+
+    <span class="k">def</span> <span class="nf">__key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FixedType</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">length</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;fixed[</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BinaryType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.BinaryType">[docs]</a><span class="k">class</span> <span class="nc">BinaryType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+    <span class="n">__instance</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="BinaryType.get"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.BinaryType.get">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">BinaryType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">BinaryType</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">BinaryType</span><span class="o">.</span><span class="n">__instance</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">BinaryType</span><span class="o">.</span><span class="n">__instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Multiple Binary Types created&quot;</span><span class="p">)</span>
+        <span class="n">BinaryType</span><span class="o">.</span><span class="n">__instance</span> <span class="o">=</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">BINARY</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;binary&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;binary&quot;</span></div>
+
+
+<div class="viewcode-block" id="DecimalType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.DecimalType">[docs]</a><span class="k">class</span> <span class="nc">DecimalType</span><span class="p">(</span><span class="n">PrimitiveType</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DecimalType.of"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.DecimalType.of">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">of</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DecimalType</span><span class="p">(</span><span class="n">precision</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">precision</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">precision</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">38</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Decimals with precision larger than 38 are not supported: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">precision</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">precision</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DECIMAL</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;decimal(</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">DecimalType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">precision</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">precision</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">scale</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__key</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DecimalType</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">precision</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span></div>
+
+
+<div class="viewcode-block" id="NestedField"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.NestedField">[docs]</a><span class="k">class</span> <span class="nc">NestedField</span><span class="p">():</span>
+<div class="viewcode-block" id="NestedField.optional"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.NestedField.optional">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">optional</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">NestedField</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="n">doc</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NestedField.required"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.NestedField.required">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">required</span><span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">NestedField</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="n">doc</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_optional</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_optional</span> <span class="o">=</span> <span class="n">is_optional</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">=</span> <span class="n">doc</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">is_required</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_optional</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">field_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                      <span class="s2">&quot;optional&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_optional</span> <span class="k">else</span> <span class="s2">&quot;required&quot;</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                                      <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">NestedField</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_optional</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">is_optional</span> \
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">id</span> \
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">type</span> \
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">doc</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__key</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">type_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">type_id</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">return</span> <span class="n">NestedField</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_optional</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">doc</span><span class="p">,</span> <span class="n">type_name</span></div>
+
+
+<div class="viewcode-block" id="StructType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StructType">[docs]</a><span class="k">class</span> <span class="nc">StructType</span><span class="p">(</span><span class="n">NestedType</span><span class="p">):</span>
+    <span class="n">FIELD_SEP</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span>
+
+<div class="viewcode-block" id="StructType.of"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StructType.of">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">of</span><span class="p">(</span><span class="n">fields</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">StructType</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">fields</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Field list cannot be None&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fields</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fieldList</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByName</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByLowercaseName</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsById</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">StructType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_fields</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lazy_field_list</span><span class="p">()</span>
+
+<div class="viewcode-block" id="StructType.field"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StructType.field">[docs]</a>    <span class="k">def</span> <span class="nf">field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lazy_fields_by_name</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lazy_fields_by_id</span><span class="p">()[</span><span class="nb">id</span><span class="p">]</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No valid field info passed in &quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StructType.case_insensitive_field"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StructType.case_insensitive_field">[docs]</a>    <span class="k">def</span> <span class="nf">case_insensitive_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lazy_fields_by_lowercase_name</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">STRUCT</span>
+
+<div class="viewcode-block" id="StructType.is_struct_type"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StructType.is_struct_type">[docs]</a>    <span class="k">def</span> <span class="nf">is_struct_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="StructType.as_struct_type"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StructType.as_struct_type">[docs]</a>    <span class="k">def</span> <span class="nf">as_struct_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;struct&lt;</span><span class="si">{}</span><span class="s2">&gt;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">StructType</span><span class="o">.</span><span class="n">FIELD_SEP</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__key</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">StructType</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span>
+
+    <span class="k">def</span> <span class="nf">_lazy_field_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fieldList</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fieldList</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fieldList</span>
+
+    <span class="k">def</span> <span class="nf">_lazy_fields_by_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index_fields</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByName</span>
+
+    <span class="k">def</span> <span class="nf">_lazy_fields_by_lowercase_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index_fields</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByName</span>
+
+    <span class="k">def</span> <span class="nf">_lazy_fields_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsById</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">index_fields</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsById</span>
+
+<div class="viewcode-block" id="StructType.index_fields"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.StructType.index_fields">[docs]</a>    <span class="k">def</span> <span class="nf">index_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByName</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByLowercaseName</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsById</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByName</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsByLowercaseName</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">field</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fieldsById</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span></div></div>
+
+
+<div class="viewcode-block" id="ListType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType">[docs]</a><span class="k">class</span> <span class="nc">ListType</span><span class="p">(</span><span class="n">NestedType</span><span class="p">):</span>
+<div class="viewcode-block" id="ListType.of_optional"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.of_optional">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">of_optional</span><span class="p">(</span><span class="n">element_id</span><span class="p">,</span> <span class="n">element_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">element_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Element type cannot be null&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ListType</span><span class="p">(</span><span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="n">element_id</span><span class="p">,</span> <span class="s2">&quot;element&quot;</span><span class="p">,</span> <span class="n">element_type</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ListType.of_required"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.of_required">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">of_required</span><span class="p">(</span><span class="n">element_id</span><span class="p">,</span> <span class="n">element_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">element_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Element type cannot be null&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ListType</span><span class="p">(</span><span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="n">element_id</span><span class="p">,</span> <span class="s2">&quot;element&quot;</span><span class="p">,</span> <span class="n">element_type</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_field</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span> <span class="o">=</span> <span class="n">element_field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">LIST</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">element_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span><span class="o">.</span><span class="n">type</span>
+
+<div class="viewcode-block" id="ListType.field_type"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.field_type">[docs]</a>    <span class="k">def</span> <span class="nf">field_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;element&quot;</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_type</span></div>
+
+<div class="viewcode-block" id="ListType.field"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.field">[docs]</a>    <span class="k">def</span> <span class="nf">field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span></div>
+
+<div class="viewcode-block" id="ListType.fields"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.fields">[docs]</a>    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lazyFieldsList</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">element_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span><span class="o">.</span><span class="n">id</span>
+
+<div class="viewcode-block" id="ListType.is_element_required"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.is_element_required">[docs]</a>    <span class="k">def</span> <span class="nf">is_element_required</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span><span class="o">.</span><span class="n">is_optional</span></div>
+
+<div class="viewcode-block" id="ListType.is_element_optional"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.is_element_optional">[docs]</a>    <span class="k">def</span> <span class="nf">is_element_optional</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span><span class="o">.</span><span class="n">is_optional</span></div>
+
+<div class="viewcode-block" id="ListType.is_list_type"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.is_list_type">[docs]</a>    <span class="k">def</span> <span class="nf">is_list_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="ListType.as_list_type"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.ListType.as_list_type">[docs]</a>    <span class="k">def</span> <span class="nf">as_list_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;list&lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span><span class="o">.</span><span class="n">type</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ListType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">element_field</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__key</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">StructType</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_field</span>
+
+    <span class="k">def</span> <span class="nf">_lazyFieldsList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">element_field</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span></div>
+
+
+<div class="viewcode-block" id="MapType"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType">[docs]</a><span class="k">class</span> <span class="nc">MapType</span><span class="p">(</span><span class="n">NestedType</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MapType.of_optional"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.of_optional">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">of_optional</span><span class="p">(</span><span class="n">key_id</span><span class="p">,</span> <span class="n">value_id</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Value type cannot be null&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">MapType</span><span class="p">(</span><span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="n">key_id</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="n">key_type</span><span class="p">),</span>
+                       <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="n">value_id</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">value_type</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="MapType.of_required"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.of_required">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">of_required</span><span class="p">(</span><span class="n">key_id</span><span class="p">,</span> <span class="n">value_id</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Value type cannot be null&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">MapType</span><span class="p">(</span><span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="n">key_id</span><span class="p">,</span> <span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="n">key_type</span><span class="p">),</span>
+                       <span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="n">value_id</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="n">value_type</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key_field</span><span class="p">,</span> <span class="n">value_field</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key_field</span> <span class="o">=</span> <span class="n">key_field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span> <span class="o">=</span> <span class="n">value_field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">MAP</span>
+
+<div class="viewcode-block" id="MapType.key_type"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.key_type">[docs]</a>    <span class="k">def</span> <span class="nf">key_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_field</span><span class="o">.</span><span class="n">type</span></div>
+
+<div class="viewcode-block" id="MapType.value_type"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.value_type">[docs]</a>    <span class="k">def</span> <span class="nf">value_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span><span class="o">.</span><span class="n">type</span></div>
+
+<div class="viewcode-block" id="MapType.field_type"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.field_type">[docs]</a>    <span class="k">def</span> <span class="nf">field_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;key&quot;</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_field</span><span class="o">.</span><span class="n">type</span>
+        <span class="k">elif</span> <span class="s2">&quot;value&quot;</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span><span class="o">.</span><span class="n">type</span></div>
+
+<div class="viewcode-block" id="MapType.field"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.field">[docs]</a>    <span class="k">def</span> <span class="nf">field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_field</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_field</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span></div>
+
+<div class="viewcode-block" id="MapType.fields"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.fields">[docs]</a>    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lazy_field_list</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MapType.key_id"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.key_id">[docs]</a>    <span class="k">def</span> <span class="nf">key_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_field</span><span class="o">.</span><span class="n">field_id</span></div>
+
+<div class="viewcode-block" id="MapType.value_id"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.value_id">[docs]</a>    <span class="k">def</span> <span class="nf">value_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span><span class="o">.</span><span class="n">field_id</span></div>
+
+<div class="viewcode-block" id="MapType.is_value_optional"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.is_value_optional">[docs]</a>    <span class="k">def</span> <span class="nf">is_value_optional</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span><span class="o">.</span><span class="n">is_optional</span></div>
+
+<div class="viewcode-block" id="MapType.is_value_required"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.manifest_file.MapType.is_value_required">[docs]</a>    <span class="k">def</span> <span class="nf">is_value_required</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_value_optional</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;map&lt;</span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key_field</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">MapType</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_field</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">key_field</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value_field</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__key</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">MapType</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span>
+
+    <span class="k">def</span> <span class="nf">_lazy_field_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_field</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

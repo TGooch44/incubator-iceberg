@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.data_file &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.api.data_file</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.api.data_file</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">from</span> <span class="nn">iceberg.api.types</span> <span class="k">import</span> <span class="p">(</span><span class="n">BinaryType</span><span class="p">,</span>
+                               <span class="n">IntegerType</span><span class="p">,</span>
+                               <span class="n">ListType</span><span class="p">,</span>
+                               <span class="n">LongType</span><span class="p">,</span>
+                               <span class="n">MapType</span><span class="p">,</span>
+                               <span class="n">NestedField</span><span class="p">,</span>
+                               <span class="n">StringType</span><span class="p">,</span>
+                               <span class="n">StructType</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DataFile"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile">[docs]</a><span class="k">class</span> <span class="nc">DataFile</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DataFile.get_type"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.get_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_type</span><span class="p">(</span><span class="n">partition_type</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">StructType</span><span class="o">.</span><span class="n">of</span><span class="p">([</span><span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="s2">&quot;file_path&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="s2">&quot;file_format&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="s2">&quot;partition&quot;</span><span class="p">,</span> <span class="n">partition_type</span><span class="p">),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="mi">103</span><span class="p">,</span> <span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="n">LongType</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="mi">104</span><span class="p">,</span> <span class="s2">&quot;file_size_in_bytes&quot;</span><span class="p">,</span> <span class="n">LongType</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="mi">105</span><span class="p">,</span> <span class="s2">&quot;block_size_in_bytes&quot;</span><span class="p">,</span> <span class="n">LongType</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="mi">106</span><span class="p">,</span> <span class="s2">&quot;file_ordinal&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="mi">107</span><span class="p">,</span> <span class="s2">&quot;sort_columns&quot;</span><span class="p">,</span> <span class="n">ListType</span><span class="o">.</span><span class="n">of_required</span><span class="p">(</span><span class="mi">112</span><span class="p">,</span> <span class="n">IntegerType</span><span class="o">.</span><span class="n">get</span><span class="p">())),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="mi">108</span><span class="p">,</span> <span class="s2">&quot;column_sizes&quot;</span><span class="p">,</span> <span class="n">MapType</span><span class="o">.</span><span class="n">of_required</span><span class="p">(</span><span class="mi">117</span><span class="p">,</span> <span class="mi">118</span><span class="p">,</span>
+                                                                                           <span class="n">IntegerType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                                                                           <span class="n">LongType</span><span class="o">.</span><span class="n">get</span><span class="p">())),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="mi">109</span><span class="p">,</span> <span class="s2">&quot;value_counts&quot;</span><span class="p">,</span> <span class="n">MapType</span><span class="o">.</span><span class="n">of_required</span><span class="p">(</span><span class="mi">119</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span>
+                                                                                           <span class="n">IntegerType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                                                                           <span class="n">LongType</span><span class="o">.</span><span class="n">get</span><span class="p">())),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="s2">&quot;null_value_counts&quot;</span><span class="p">,</span> <span class="n">MapType</span><span class="o">.</span><span class="n">of_required</span><span class="p">(</span><span class="mi">121</span><span class="p">,</span> <span class="mi">122</span><span class="p">,</span>
+                                                                                                <span class="n">IntegerType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                                                                                <span class="n">LongType</span><span class="o">.</span><span class="n">get</span><span class="p">())),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="mi">125</span><span class="p">,</span> <span class="s2">&quot;lower_bounds&quot;</span><span class="p">,</span> <span class="n">MapType</span><span class="o">.</span><span class="n">of_required</span><span class="p">(</span><span class="mi">126</span><span class="p">,</span> <span class="mi">127</span><span class="p">,</span>
+                                                                                           <span class="n">IntegerType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                                                                           <span class="n">BinaryType</span><span class="o">.</span><span class="n">get</span><span class="p">())),</span>
+                             <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="s2">&quot;upper_bounds&quot;</span><span class="p">,</span> <span class="n">MapType</span><span class="o">.</span><span class="n">of_required</span><span class="p">(</span><span class="mi">129</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span>
+                                                                                           <span class="n">IntegerType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                                                                           <span class="n">BinaryType</span><span class="o">.</span><span class="n">get</span><span class="p">()))]</span>
+                             <span class="c1"># NEXT ID TO ASSIGN: 131</span>
+                             <span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataFile.path"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.path">[docs]</a>    <span class="k">def</span> <span class="nf">path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.format"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.format">[docs]</a>    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.partition"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.partition">[docs]</a>    <span class="k">def</span> <span class="nf">partition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.record_count"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.record_count">[docs]</a>    <span class="k">def</span> <span class="nf">record_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.file_size_in_bytes"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.file_size_in_bytes">[docs]</a>    <span class="k">def</span> <span class="nf">file_size_in_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.block_size_in_bytes"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.block_size_in_bytes">[docs]</a>    <span class="k">def</span> <span class="nf">block_size_in_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.file_ordinal"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.file_ordinal">[docs]</a>    <span class="k">def</span> <span class="nf">file_ordinal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.sort_columns"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.sort_columns">[docs]</a>    <span class="k">def</span> <span class="nf">sort_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.column_sizes"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.column_sizes">[docs]</a>    <span class="k">def</span> <span class="nf">column_sizes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.value_counts"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.value_counts">[docs]</a>    <span class="k">def</span> <span class="nf">value_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.null_value_counts"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.null_value_counts">[docs]</a>    <span class="k">def</span> <span class="nf">null_value_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.lower_bounds"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.lower_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">lower_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.upper_bounds"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.upper_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">upper_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DataFile.copy"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.data_file.DataFile.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

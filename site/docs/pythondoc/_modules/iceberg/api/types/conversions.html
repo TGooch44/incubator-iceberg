@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.types.conversions &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../types.html">iceberg.api.types</a> &raquo;</li>
+        
+      <li>iceberg.api.types.conversions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.api.types.conversions</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">from</span> <span class="nn">decimal</span> <span class="k">import</span> <span class="n">Decimal</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">from</span> <span class="nn">.type</span> <span class="k">import</span> <span class="n">TypeID</span>
+
+
+<div class="viewcode-block" id="Conversions"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.types.conversions.Conversions">[docs]</a><span class="k">class</span> <span class="nc">Conversions</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">HIVE_NULL</span> <span class="o">=</span> <span class="s2">&quot;__HIVE_DEFAULT_PARTITION__&quot;</span>
+    <span class="n">value_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">TypeID</span><span class="o">.</span><span class="n">BOOLEAN</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="n">as_str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span> <span class="k">if</span> <span class="n">as_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">as_str</span><span class="p">)),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">LONG</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">as_str</span><span class="p">)),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">as_str</span><span class="p">),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">as_str</span><span class="p">),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="n">as_str</span><span class="p">,</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">UUID</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="n">as_str</span><span class="p">),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">FIXED</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="nb">bytearray</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">as_str</span><span class="p">,</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+                                                            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                                                            <span class="k">else</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">as_str</span><span class="p">)),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">BINARY</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">as_str</span><span class="p">,</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">as_str</span><span class="p">),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">DECIMAL</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">as_str</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">as_str</span><span class="p">),</span>
+                     <span class="p">}</span>
+
+    <span class="n">to_byte_buff_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">TypeID</span><span class="o">.</span><span class="n">BOOLEAN</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;h&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">value</span> <span class="k">else</span> <span class="mi">0</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">DATE</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;i&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">LONG</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;l&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">TIME</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;l&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;l&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;f&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;d&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">),</span>
+                            <span class="n">TypeID</span><span class="o">.</span><span class="n">UUID</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&gt;QQ&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">int</span> <span class="o">&gt;&gt;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFFFFFFFFFF</span><span class="p">,</span>
+                                                                             <span class="n">value</span><span class="o">.</span><span class="n">int</span> <span class="o">&amp;</span> <span class="mh">0xFFFFFFFFFFFFFFFF</span><span class="p">),</span>
+                            <span class="c1"># TypeId.FIXED: lambda as_str: None,</span>
+                            <span class="c1"># TypeId.BINARY: lambda as_str: None,</span>
+                            <span class="c1"># TypeId.DECIMAL: lambda type_var, value: struct.pack(value.quantize(</span>
+                            <span class="c1">#     Decimal(&#39;.&#39; + &quot;&quot;.join([&#39;0&#39; for x in range(0, type_var.scale)]) + &#39;1&#39;))</span>
+                            <span class="p">}</span>
+
+    <span class="n">from_byte_buff_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">TypeID</span><span class="o">.</span><span class="n">BOOLEAN</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;h&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">chr</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;i&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">DATE</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;i&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">LONG</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;q&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">TIME</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;q&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;q&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;f)&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&lt;d&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">UUID</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span>
+                              <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="nb">int</span><span class="o">=</span><span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;QQ&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">64</span> <span class="o">|</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;&gt;QQ&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)[</span><span class="mi">1</span><span class="p">]),</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">FIXED</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span>
+                              <span class="n">TypeID</span><span class="o">.</span><span class="n">BINARY</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
+
+<div class="viewcode-block" id="Conversions.from_partition_string"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.types.conversions.Conversions.from_partition_string">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_partition_string</span><span class="p">(</span><span class="n">type_var</span><span class="p">,</span> <span class="n">as_string</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">as_string</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">Conversions</span><span class="o">.</span><span class="n">HIVE_NULL</span> <span class="o">==</span> <span class="n">as_string</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">part_func</span> <span class="o">=</span> <span class="n">Conversions</span><span class="o">.</span><span class="n">value_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">part_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unsupported type for fromPartitionString: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">type_var</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">part_func</span><span class="p">(</span><span class="n">as_string</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Conversions.to_byte_buffer"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.types.conversions.Conversions.to_byte_buffer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">to_byte_buffer</span><span class="p">(</span><span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Conversions</span><span class="o">.</span><span class="n">to_byte_buff_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span><span class="p">)(</span><span class="n">type_var</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot Serialize Type: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">type_var</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Conversions.from_byte_buffer"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.types.conversions.Conversions.from_byte_buffer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_byte_buffer</span><span class="p">(</span><span class="n">type_var</span><span class="p">,</span> <span class="n">buffer_var</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Conversions</span><span class="o">.</span><span class="n">internal_from_byte_buffer</span><span class="p">(</span><span class="n">type_var</span><span class="p">,</span> <span class="n">buffer_var</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Conversions.internal_from_byte_buffer"><a class="viewcode-back" href="../../../../iceberg.api.types.html#iceberg.api.types.conversions.Conversions.internal_from_byte_buffer">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">internal_from_byte_buffer</span><span class="p">(</span><span class="n">type_var</span><span class="p">,</span> <span class="n">buffer_var</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Conversions</span><span class="o">.</span><span class="n">from_byte_buff_mapping</span><span class="p">[</span><span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span><span class="p">](</span><span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span><span class="p">,</span> <span class="n">buffer_var</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot Serialize Type: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">type_var</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

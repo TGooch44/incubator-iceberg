@@ -1,0 +1,86 @@
+iceberg.api.io package
+======================
+
+Submodules
+----------
+
+iceberg.api.io.closeable\_group module
+--------------------------------------
+
+.. automodule:: iceberg.api.io.closeable_group
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.io.closeable\_iterable module
+-----------------------------------------
+
+.. automodule:: iceberg.api.io.closeable_iterable
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.io.delegating\_input\_stream module
+-----------------------------------------------
+
+.. automodule:: iceberg.api.io.delegating_input_stream
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.io.delegating\_output\_stream module
+------------------------------------------------
+
+.. automodule:: iceberg.api.io.delegating_output_stream
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.io.file\_appender module
+------------------------------------
+
+.. automodule:: iceberg.api.io.file_appender
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.io.input\_file module
+---------------------------------
+
+.. automodule:: iceberg.api.io.input_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.io.output\_file module
+----------------------------------
+
+.. automodule:: iceberg.api.io.output_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.io.position\_output\_stream module
+----------------------------------------------
+
+.. automodule:: iceberg.api.io.position_output_stream
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.io.seekable\_input\_stream module
+---------------------------------------------
+
+.. automodule:: iceberg.api.io.seekable_input_stream
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: iceberg.api.io
+   :members:
+   :undoc-members:
+   :show-inheritance:

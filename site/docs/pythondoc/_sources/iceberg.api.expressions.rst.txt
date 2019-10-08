@@ -1,0 +1,117 @@
+iceberg.api.expressions package
+===============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   iceberg.api.expressions.java_variables
+
+Submodules
+----------
+
+iceberg.api.expressions.binder module
+-------------------------------------
+
+.. automodule:: iceberg.api.expressions.binder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.evaluator module
+----------------------------------------
+
+.. automodule:: iceberg.api.expressions.evaluator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.expression module
+-----------------------------------------
+
+.. automodule:: iceberg.api.expressions.expression
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.expressions module
+------------------------------------------
+
+.. automodule:: iceberg.api.expressions.expressions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.inclusive\_manifest\_evaluator module
+-------------------------------------------------------------
+
+.. automodule:: iceberg.api.expressions.inclusive_manifest_evaluator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.inclusive\_metrics\_evaluator module
+------------------------------------------------------------
+
+.. automodule:: iceberg.api.expressions.inclusive_metrics_evaluator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.literals module
+---------------------------------------
+
+.. automodule:: iceberg.api.expressions.literals
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.predicate module
+----------------------------------------
+
+.. automodule:: iceberg.api.expressions.predicate
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.projections module
+------------------------------------------
+
+.. automodule:: iceberg.api.expressions.projections
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.reference module
+----------------------------------------
+
+.. automodule:: iceberg.api.expressions.reference
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.residual\_evaluator module
+--------------------------------------------------
+
+.. automodule:: iceberg.api.expressions.residual_evaluator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expressions.strict\_metrics\_evaluator module
+---------------------------------------------------------
+
+.. automodule:: iceberg.api.expressions.strict_metrics_evaluator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: iceberg.api.expressions
+   :members:
+   :undoc-members:
+   :show-inheritance:

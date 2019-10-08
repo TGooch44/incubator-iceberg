@@ -1,0 +1,13 @@
+iceberg.exceptions package
+==========================
+
+Submodules
+----------
+
+Module contents
+---------------
+
+.. automodule:: iceberg.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:

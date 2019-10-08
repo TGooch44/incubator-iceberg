@@ -1,0 +1,351 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.core.manifest_reader &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.core.manifest_reader</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.core.manifest_reader</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">fastavro</span>
+<span class="kn">from</span> <span class="nn">iceberg.api</span> <span class="k">import</span> <span class="n">FileFormat</span><span class="p">,</span> <span class="n">Filterable</span>
+<span class="kn">from</span> <span class="nn">iceberg.api.expressions</span> <span class="k">import</span> <span class="n">Expressions</span><span class="p">,</span> <span class="n">inclusive</span>
+<span class="kn">from</span> <span class="nn">iceberg.api.io</span> <span class="k">import</span> <span class="n">CloseableGroup</span>
+
+<span class="kn">from</span> <span class="nn">.avro</span> <span class="k">import</span> <span class="n">AvroToIceberg</span>
+<span class="kn">from</span> <span class="nn">.filtered_manifest</span> <span class="k">import</span> <span class="n">FilteredManifest</span>
+<span class="kn">from</span> <span class="nn">.manifest_entry</span> <span class="k">import</span> <span class="n">ManifestEntry</span><span class="p">,</span> <span class="n">Status</span>
+<span class="kn">from</span> <span class="nn">.partition_spec_parser</span> <span class="k">import</span> <span class="n">PartitionSpecParser</span>
+<span class="kn">from</span> <span class="nn">.schema_parser</span> <span class="k">import</span> <span class="n">SchemaParser</span>
+<span class="kn">from</span> <span class="nn">.table_metadata</span> <span class="k">import</span> <span class="n">TableMetadata</span>
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ManifestReader"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader">[docs]</a><span class="k">class</span> <span class="nc">ManifestReader</span><span class="p">(</span><span class="n">CloseableGroup</span><span class="p">,</span> <span class="n">Filterable</span><span class="p">):</span>
+    <span class="n">ALL_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*&quot;</span><span class="p">]</span>
+    <span class="n">CHANGE_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">,</span> <span class="s2">&quot;file_format&quot;</span><span class="p">,</span> <span class="s2">&quot;partition&quot;</span><span class="p">,</span> <span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="s2">&quot;file_size_in_bytes&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="ManifestReader.read"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.read">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">spec_lookup</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ManifestReader</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">file</span><span class="p">,</span> <span class="n">spec_lookup</span><span class="o">=</span><span class="n">spec_lookup</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ManifestReader.select"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.select">[docs]</a>    <span class="k">def</span> <span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FilteredManifest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                <span class="n">Expressions</span><span class="o">.</span><span class="n">always_true</span><span class="p">(),</span>
+                                <span class="n">Expressions</span><span class="o">.</span><span class="n">always_true</span><span class="p">(),</span>
+                                <span class="nb">list</span><span class="p">(</span><span class="n">columns</span><span class="p">),</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ManifestReader.filter_partitions"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.filter_partitions">[docs]</a>    <span class="k">def</span> <span class="nf">filter_partitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FilteredManifest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                <span class="n">expr</span><span class="p">,</span>
+                                <span class="n">Expressions</span><span class="o">.</span><span class="n">always_true</span><span class="p">(),</span>
+                                <span class="n">ManifestReader</span><span class="o">.</span><span class="n">ALL_COLUMNS</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ManifestReader.filter_rows"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.filter_rows">[docs]</a>    <span class="k">def</span> <span class="nf">filter_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FilteredManifest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                                <span class="n">inclusive</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">expr</span><span class="p">),</span>
+                                <span class="n">expr</span><span class="p">,</span>
+                                <span class="n">ManifestReader</span><span class="o">.</span><span class="n">ALL_COLUMNS</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ManifestReader.in_memory"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.in_memory">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">in_memory</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">entries</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ManifestReader</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">,</span> <span class="n">entries</span><span class="o">=</span><span class="n">entries</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spec_lookup</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_case_sensitive</span> <span class="o">=</span> <span class="n">case_sensitive</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_avro_rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fo</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_avro_reader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_avro_rows</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">([</span><span class="n">item</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">]]):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__init_from_spec</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__init_from_file</span><span class="p">(</span><span class="n">spec_lookup</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adds</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deletes</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec_lookup</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">new_fo</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_avro_reader</span> <span class="o">=</span> <span class="n">fastavro</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fo</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_avro_reader</span><span class="o">.</span><span class="n">metadata</span>
+        <span class="n">spec_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;partition-spec-id&quot;</span><span class="p">,</span> <span class="n">TableMetadata</span><span class="o">.</span><span class="n">INITIAL_SPEC_ID</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">spec_lookup</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec_lookup</span><span class="p">(</span><span class="n">spec_id</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">schema</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">SchemaParser</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">PartitionSpecParser</span><span class="o">.</span><span class="n">from_json_fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span> <span class="n">spec_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;partition-spec&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__init_from_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">schema</span>
+
+<div class="viewcode-block" id="ManifestReader.case_sensitive"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.case_sensitive">[docs]</a>    <span class="k">def</span> <span class="nf">case_sensitive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">ManifestReader</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span>
+                              <span class="n">schema</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ManifestReader.cache_changes"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.cache_changes">[docs]</a>    <span class="k">def</span> <span class="nf">cache_changes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">adds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">deletes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">(</span><span class="n">ManifestReader</span><span class="o">.</span><span class="n">CHANGE_COLUMNS</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;ADDED&quot;</span><span class="p">:</span>
+                <span class="n">adds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+            <span class="k">elif</span> <span class="n">entry</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;DELETED&quot;</span><span class="p">:</span>
+                <span class="n">deletes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adds</span> <span class="o">=</span> <span class="n">adds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_deletes</span> <span class="o">=</span> <span class="n">deletes</span></div>
+
+<div class="viewcode-block" id="ManifestReader.added_files"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.added_files">[docs]</a>    <span class="k">def</span> <span class="nf">added_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache_changes</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adds</span></div>
+
+<div class="viewcode-block" id="ManifestReader.deleted_files"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.deleted_files">[docs]</a>    <span class="k">def</span> <span class="nf">deleted_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cache_changes</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_deletes</span></div>
+
+<div class="viewcode-block" id="ManifestReader.entries"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.entries">[docs]</a>    <span class="k">def</span> <span class="nf">entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">columns</span> <span class="o">=</span> <span class="n">ManifestReader</span><span class="o">.</span><span class="n">ALL_COLUMNS</span>
+
+        <span class="n">file_format</span> <span class="o">=</span> <span class="n">FileFormat</span><span class="o">.</span><span class="n">from_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">location</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">file_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unable to determine format of manifest: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+
+        <span class="n">proj_schema</span> <span class="o">=</span> <span class="n">ManifestEntry</span><span class="o">.</span><span class="n">project_schema</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">partition_type</span><span class="p">(),</span> <span class="n">columns</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">file_format</span> <span class="ow">is</span> <span class="n">FileFormat</span><span class="o">.</span><span class="n">AVRO</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">read_entry</span> <span class="ow">in</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">read_avro_row</span><span class="p">(</span><span class="n">proj_schema</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_avro_reader</span><span class="p">):</span>
+                    <span class="n">entry</span> <span class="o">=</span> <span class="n">ManifestEntry</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">proj_schema</span><span class="p">,</span> <span class="n">partition_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">partition_type</span><span class="p">())</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">read_entry</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                        <span class="n">entry</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">read_entry</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_fo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_avro_reader</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entries</span></div>
+
+<div class="viewcode-block" id="ManifestReader.iterator"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.manifest_reader.ManifestReader.iterator">[docs]</a>    <span class="k">def</span> <span class="nf">iterator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">part_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">part_filter</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterator</span><span class="p">(</span><span class="n">Expressions</span><span class="o">.</span><span class="n">always_true</span><span class="p">(),</span> <span class="n">Filterable</span><span class="o">.</span><span class="n">ALL_COLUMNS</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">file</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="p">()</span> <span class="k">if</span> <span class="n">entry</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">Status</span><span class="o">.</span><span class="n">DELETED</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

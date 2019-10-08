@@ -1,0 +1,272 @@
+iceberg.api package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   iceberg.api.expressions
+   iceberg.api.io
+   iceberg.api.transforms
+   iceberg.api.types
+
+Submodules
+----------
+
+iceberg.api.append\_files module
+--------------------------------
+
+.. automodule:: iceberg.api.append_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.combined\_scan\_task module
+---------------------------------------
+
+.. automodule:: iceberg.api.combined_scan_task
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.data\_file module
+-----------------------------
+
+.. automodule:: iceberg.api.data_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.data\_operations module
+-----------------------------------
+
+.. automodule:: iceberg.api.data_operations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.delete\_files module
+--------------------------------
+
+.. automodule:: iceberg.api.delete_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.expire\_snapshots module
+------------------------------------
+
+.. automodule:: iceberg.api.expire_snapshots
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.file\_format module
+-------------------------------
+
+.. automodule:: iceberg.api.file_format
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.file\_scan\_task module
+-----------------------------------
+
+.. automodule:: iceberg.api.file_scan_task
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.files module
+------------------------
+
+.. automodule:: iceberg.api.files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.filterable module
+-----------------------------
+
+.. automodule:: iceberg.api.filterable
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.filtered\_snapshot module
+-------------------------------------
+
+.. automodule:: iceberg.api.filtered_snapshot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.manifest\_file module
+---------------------------------
+
+.. automodule:: iceberg.api.manifest_file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.metrics module
+--------------------------
+
+.. automodule:: iceberg.api.metrics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.overwrite\_files module
+-----------------------------------
+
+.. automodule:: iceberg.api.overwrite_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.partition\_field module
+-----------------------------------
+
+.. automodule:: iceberg.api.partition_field
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.partition\_spec module
+----------------------------------
+
+.. automodule:: iceberg.api.partition_spec
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.pending\_update module
+----------------------------------
+
+.. automodule:: iceberg.api.pending_update
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.replace\_partitions module
+--------------------------------------
+
+.. automodule:: iceberg.api.replace_partitions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.rewrite\_files module
+---------------------------------
+
+.. automodule:: iceberg.api.rewrite_files
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.rollback module
+---------------------------
+
+.. automodule:: iceberg.api.rollback
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.scan\_task module
+-----------------------------
+
+.. automodule:: iceberg.api.scan_task
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.schema module
+-------------------------
+
+.. automodule:: iceberg.api.schema
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.snapshot module
+---------------------------
+
+.. automodule:: iceberg.api.snapshot
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.snapshot\_iterable module
+-------------------------------------
+
+.. automodule:: iceberg.api.snapshot_iterable
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.struct\_like module
+-------------------------------
+
+.. automodule:: iceberg.api.struct_like
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.table module
+------------------------
+
+.. automodule:: iceberg.api.table
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.table\_scan module
+------------------------------
+
+.. automodule:: iceberg.api.table_scan
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.tables module
+-------------------------
+
+.. automodule:: iceberg.api.tables
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.transaction module
+------------------------------
+
+.. automodule:: iceberg.api.transaction
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.update\_properties module
+-------------------------------------
+
+.. automodule:: iceberg.api.update_properties
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.api.update\_schema module
+---------------------------------
+
+.. automodule:: iceberg.api.update_schema
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: iceberg.api
+   :members:
+   :undoc-members:
+   :show-inheritance:

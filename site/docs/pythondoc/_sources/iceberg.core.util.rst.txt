@@ -1,0 +1,30 @@
+iceberg.core.util package
+=========================
+
+Submodules
+----------
+
+iceberg.core.util.atomic\_integer module
+----------------------------------------
+
+.. automodule:: iceberg.core.util.atomic_integer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.util.bin\_packing module
+-------------------------------------
+
+.. automodule:: iceberg.core.util.bin_packing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: iceberg.core.util
+   :members:
+   :undoc-members:
+   :show-inheritance:

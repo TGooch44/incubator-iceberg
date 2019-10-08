@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.core.avro.avro_to_iceberg &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.core.avro.avro_to_iceberg</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.core.avro.avro_to_iceberg</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">import</span> <span class="nn">fastavro</span>
+<span class="kn">from</span> <span class="nn">iceberg.api</span> <span class="k">import</span> <span class="n">Schema</span>
+<span class="kn">from</span> <span class="nn">iceberg.api.types</span> <span class="k">import</span> <span class="p">(</span><span class="n">BinaryType</span><span class="p">,</span>
+                               <span class="n">BooleanType</span><span class="p">,</span>
+                               <span class="n">DateType</span><span class="p">,</span>
+                               <span class="n">DoubleType</span><span class="p">,</span>
+                               <span class="n">FloatType</span><span class="p">,</span>
+                               <span class="n">IntegerType</span><span class="p">,</span>
+                               <span class="n">ListType</span><span class="p">,</span>
+                               <span class="n">LongType</span><span class="p">,</span>
+                               <span class="n">MapType</span><span class="p">,</span>
+                               <span class="n">NestedField</span><span class="p">,</span>
+                               <span class="n">StringType</span><span class="p">,</span>
+                               <span class="n">StructType</span><span class="p">,</span>
+                               <span class="n">TimestampType</span><span class="p">,</span>
+                               <span class="n">TimeType</span><span class="p">,</span>
+                               <span class="n">TypeID</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="AvroToIceberg"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg">[docs]</a><span class="k">class</span> <span class="nc">AvroToIceberg</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">FIELD_ID_PROP</span> <span class="o">=</span> <span class="s2">&quot;field-id&quot;</span>
+    <span class="n">FIELD_TYPE_PROP</span> <span class="o">=</span> <span class="s2">&quot;type&quot;</span>
+    <span class="n">FIELD_NAME_PROP</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
+    <span class="n">FIELD_LOGICAL_TYPE_PROP</span> <span class="o">=</span> <span class="s2">&quot;logicalType&quot;</span>
+    <span class="n">FIELD_FIELDS_PROP</span> <span class="o">=</span> <span class="s2">&quot;fields&quot;</span>
+    <span class="n">FIELD_ITEMS_PROP</span> <span class="o">=</span> <span class="s2">&quot;items&quot;</span>
+    <span class="n">FIELD_ELEMENT_ID_PROP</span> <span class="o">=</span> <span class="s2">&quot;element-id&quot;</span>
+
+    <span class="n">AVRO_JSON_PRIMITIVE_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;boolean&quot;</span><span class="p">,</span> <span class="s2">&quot;int&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">,</span> <span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="s2">&quot;bytes&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span>
+    <span class="n">AVRO_JSON_COMPLEX_TYPES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;record&quot;</span><span class="p">,</span> <span class="s2">&quot;array&quot;</span><span class="p">,</span> <span class="s2">&quot;enum&quot;</span><span class="p">,</span> <span class="s2">&quot;fixed&quot;</span><span class="p">)</span>
+
+    <span class="n">TYPE_PROCESSING_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_str_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                           <span class="nb">dict</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_complex_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                           <span class="nb">list</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_union_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)}</span>
+
+    <span class="n">COMPLEX_TYPE_PROCESSING_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;record&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_record_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                                   <span class="s2">&quot;array&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_array_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span>
+                                   <span class="s2">&quot;map&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_map_type</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)}</span>
+
+    <span class="n">PRIMITIVE_FIELD_TYPE_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;boolean&quot;</span><span class="p">:</span> <span class="n">BooleanType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;bytes&quot;</span><span class="p">:</span> <span class="n">BinaryType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">DateType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;double&quot;</span><span class="p">:</span> <span class="n">DoubleType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;float&quot;</span><span class="p">:</span> <span class="n">FloatType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;int&quot;</span><span class="p">:</span> <span class="n">IntegerType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;long&quot;</span><span class="p">:</span> <span class="n">LongType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="n">StringType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;time-millis&quot;</span><span class="p">:</span> <span class="n">TimeType</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span>
+                                <span class="s2">&quot;timestamp-millis&quot;</span><span class="p">:</span> <span class="n">TimestampType</span><span class="o">.</span><span class="n">without_timezone</span><span class="p">()}</span>
+
+    <span class="n">PROCESS_FUNCS</span> <span class="o">=</span> <span class="p">{</span><span class="n">TypeID</span><span class="o">.</span><span class="n">STRUCT</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">get_field_from_struct</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">LIST</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">get_field_from_list</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">),</span>
+                     <span class="n">TypeID</span><span class="o">.</span><span class="n">MAP</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">get_field_from_map</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">)}</span>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_avro_schema_to_iceberg"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_avro_schema_to_iceberg">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_avro_schema_to_iceberg</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">avro_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;record&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot convert avro schema to iceberg </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_schema</span><span class="p">)</span>
+
+        <span class="n">struct</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_type</span><span class="p">(</span><span class="n">avro_schema</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Schema</span><span class="p">(</span><span class="n">struct</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_record_type"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_record_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_record_type</span><span class="p">(</span><span class="n">avro_field</span><span class="p">,</span> <span class="n">next_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">avro_field_type</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">avro_field_type</span> <span class="o">!=</span> <span class="s2">&quot;record&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Field type muse be &#39;record&#39;: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span>
+
+        <span class="n">fields</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_FIELDS_PROP</span><span class="p">)</span>
+
+        <span class="n">iceberg_fields</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">next_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">next_id</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">iceberg_field</span><span class="p">,</span> <span class="n">next_id</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_avro_field_to_iceberg</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">next_id</span><span class="o">=</span><span class="n">next_id</span><span class="p">)</span>
+            <span class="n">iceberg_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">iceberg_field</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">StructType</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">iceberg_fields</span><span class="p">),</span> <span class="n">next_id</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_avro_field_to_iceberg"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_avro_field_to_iceberg">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_avro_field_to_iceberg</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">next_id</span><span class="p">):</span>
+        <span class="n">field_type</span><span class="p">,</span> <span class="n">is_optional</span><span class="p">,</span> <span class="n">next_id</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_type</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">next_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_ID_PROP</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">field_type</span><span class="p">,</span> <span class="n">next_id</span>
+
+        <span class="k">if</span> <span class="n">is_optional</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_ID_PROP</span><span class="p">),</span>
+                                        <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_NAME_PROP</span><span class="p">),</span>
+                                        <span class="n">field_type</span><span class="p">),</span> <span class="n">next_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NestedField</span><span class="o">.</span><span class="n">required</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_ID_PROP</span><span class="p">),</span>
+                                        <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_NAME_PROP</span><span class="p">),</span>
+                                        <span class="n">field_type</span><span class="p">),</span> <span class="n">next_id</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_type"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_type</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">next_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">avro_field_type</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">)</span>
+
+        <span class="n">optional</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">is_option_schema</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">)</span>
+
+        <span class="n">processing_func</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">TYPE_PROCESSING_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">processing_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No function found to process </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span>
+
+        <span class="n">iceberg_type</span><span class="p">,</span> <span class="n">next_id</span> <span class="o">=</span> <span class="n">processing_func</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">next_id</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">iceberg_type</span><span class="p">,</span> <span class="n">optional</span><span class="p">,</span> <span class="n">next_id</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_str_type"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_str_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_str_type</span><span class="p">(</span><span class="n">avro_field</span><span class="p">,</span> <span class="n">next_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">avro_field_type</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">)</span>
+        <span class="n">logical_type</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_LOGICAL_TYPE_PROP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Field type must be of type str: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">avro_field_type</span> <span class="ow">in</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">AVRO_JSON_PRIMITIVE_TYPES</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logical_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">PRIMITIVE_FIELD_TYPE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">logical_type</span><span class="p">),</span> <span class="n">next_id</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">PRIMITIVE_FIELD_TYPE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">),</span> <span class="n">next_id</span>
+
+        <span class="k">elif</span> <span class="n">avro_field_type</span> <span class="ow">in</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">AVRO_JSON_COMPLEX_TYPES</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">logical_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">processing_func</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">COMPLEX_TYPE_PROCESSING_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">logical_type</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">processing_func</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">COMPLEX_TYPE_PROCESSING_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">processing_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No function found to process </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">processing_func</span><span class="p">(</span><span class="n">avro_field</span><span class="p">,</span> <span class="n">next_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unknown type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_complex_type"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_complex_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_complex_type</span><span class="p">(</span><span class="n">avro_field</span><span class="p">,</span> <span class="n">next_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">avro_field_type</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Complex field type must be of type dict: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_avro_field_to_iceberg</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">,</span> <span class="n">next_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_union_type"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_union_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_union_type</span><span class="p">(</span><span class="n">avro_field</span><span class="p">,</span> <span class="n">next_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">avro_field_type</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Union field type must be of type list: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">avro_field_type</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot process unions larger than 2 items: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">avro_field_type</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">item</span> <span class="o">==</span> <span class="s2">&quot;null&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">avro_field_type</span> <span class="o">=</span> <span class="n">item</span>
+        <span class="n">avro_field</span><span class="p">[</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">]</span> <span class="o">=</span> <span class="n">avro_field_type</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">convert_type</span><span class="p">(</span><span class="n">avro_field</span><span class="p">,</span> <span class="n">next_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_array_type"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_array_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_array_type</span><span class="p">(</span><span class="n">avro_field</span><span class="p">,</span> <span class="n">next_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">avro_field_type</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">avro_field_type</span> <span class="o">!=</span> <span class="s2">&quot;array&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Avro type must be array: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">avro_field_type</span><span class="p">)</span>
+        <span class="n">element_id</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_ELEMENT_ID_PROP</span><span class="p">)</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_ITEMS_PROP</span><span class="p">)</span>
+
+        <span class="n">is_optional</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">is_option_schema</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">PRIMITIVE_FIELD_TYPE_MAP</span><span class="p">:</span>
+            <span class="n">item_type</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">PRIMITIVE_FIELD_TYPE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">item_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No mapping found for type </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">items</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Complex list types not yet implemented&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">is_optional</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ListType</span><span class="o">.</span><span class="n">of_optional</span><span class="p">(</span><span class="n">element_id</span><span class="p">,</span> <span class="n">item_type</span><span class="p">),</span> <span class="n">next_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ListType</span><span class="o">.</span><span class="n">of_required</span><span class="p">(</span><span class="n">element_id</span><span class="p">,</span> <span class="n">item_type</span><span class="p">),</span> <span class="n">next_id</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.convert_map_type"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.convert_map_type">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">convert_map_type</span><span class="p">(</span><span class="n">avro_field</span><span class="p">,</span> <span class="n">next_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">avro_field_type</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">)</span>
+        <span class="n">avro_logical_type</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_LOGICAL_TYPE_PROP</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">avro_field_type</span> <span class="o">!=</span> <span class="s2">&quot;array&quot;</span> <span class="ow">or</span> <span class="n">avro_logical_type</span> <span class="o">!=</span> <span class="s2">&quot;map&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Avro type must be array and logical type must be map: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">avro_field_type</span><span class="p">,</span>
+                                                                                             <span class="n">avro_logical_type</span><span class="p">))</span>
+        <span class="n">is_optional</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">avro_field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_ITEMS_PROP</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">items</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_FIELDS_PROP</span><span class="p">,</span> <span class="nb">list</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_NAME_PROP</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;key&quot;</span><span class="p">:</span>
+                <span class="n">key_id</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_ID_PROP</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">),</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Support for complex map keys not yet implemented&quot;</span><span class="p">)</span>
+                <span class="n">key_type</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">PRIMITIVE_FIELD_TYPE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_NAME_PROP</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span>
+                <span class="n">value_id</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_ID_PROP</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">),</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Support for complex map values not yet imeplemented&quot;</span><span class="p">)</span>
+                <span class="n">value_type</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">PRIMITIVE_FIELD_TYPE_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">FIELD_TYPE_PROP</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">is_optional</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MapType</span><span class="o">.</span><span class="n">of_optional</span><span class="p">(</span><span class="n">key_id</span><span class="p">,</span> <span class="n">value_id</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="n">value_type</span><span class="p">),</span> <span class="n">next_id</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">MapType</span><span class="o">.</span><span class="n">of_required</span><span class="p">(</span><span class="n">key_id</span><span class="p">,</span> <span class="n">value_id</span><span class="p">,</span> <span class="n">key_type</span><span class="p">,</span> <span class="n">value_type</span><span class="p">),</span> <span class="n">next_id</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.is_option_schema"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.is_option_schema">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_option_schema</span><span class="p">(</span><span class="n">field_type</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">field_type</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="s2">&quot;null&quot;</span> <span class="ow">in</span> <span class="n">field_type</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.read_avro_file"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.read_avro_file">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_avro_file</span><span class="p">(</span><span class="n">iceberg_schema</span><span class="p">,</span> <span class="n">data_file</span><span class="p">):</span>
+        <span class="n">fo</span> <span class="o">=</span> <span class="n">data_file</span><span class="o">.</span><span class="n">new_fo</span><span class="p">()</span>
+        <span class="n">avro_reader</span> <span class="o">=</span> <span class="n">fastavro</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">fo</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">avro_row</span> <span class="ow">in</span> <span class="n">avro_reader</span><span class="p">:</span>
+            <span class="n">iceberg_row</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">iceberg_schema</span><span class="o">.</span><span class="n">as_struct</span><span class="p">()</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                <span class="n">iceberg_row</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">get_field_from_avro</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">iceberg_row</span>
+        <span class="n">fo</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.read_avro_row"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.read_avro_row">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">read_avro_row</span><span class="p">(</span><span class="n">iceberg_schema</span><span class="p">,</span> <span class="n">avro_reader</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">avro_row</span> <span class="ow">in</span> <span class="n">avro_reader</span><span class="p">:</span>
+                <span class="n">iceberg_row</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">iceberg_schema</span><span class="o">.</span><span class="n">as_struct</span><span class="p">()</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                    <span class="n">iceberg_row</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">get_field_from_avro</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+                <span class="k">yield</span> <span class="n">iceberg_row</span>
+        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+            <span class="k">return</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.get_field_from_avro"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.get_field_from_avro">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_field_from_avro</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">PROCESS_FUNCS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">type_id</span><span class="p">,</span>
+                                                   <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">get_field_from_primitive</span><span class="p">)(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Don&#39;t know how to get field of type: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">type_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.get_field_from_primitive"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.get_field_from_primitive">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_field_from_primitive</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">avro_row</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">is_required</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Field is required but missing in source </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">avro_row</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.get_field_from_struct"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.get_field_from_struct">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_field_from_struct</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">field_obj</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">nested_field</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="n">field_obj</span><span class="p">[</span><span class="n">nested_field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">AvroToIceberg</span><span class="o">.</span><span class="n">get_field_from_avro</span><span class="p">(</span><span class="n">avro_row</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">],</span> <span class="n">nested_field</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">field_obj</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.get_field_from_list"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.get_field_from_list">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_field_from_list</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">avro_row</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">is_required</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Field is required but missing in source </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">avro_row</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="AvroToIceberg.get_field_from_map"><a class="viewcode-back" href="../../../../iceberg.core.avro.html#iceberg.core.avro.avro_to_iceberg.AvroToIceberg.get_field_from_map">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_field_from_map</span><span class="p">(</span><span class="n">avro_row</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+        <span class="n">val_map</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">avro_value</span> <span class="o">=</span> <span class="n">avro_row</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">is_required</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Field is required but missing in source </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">avro_row</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">avro_value</span><span class="p">:</span>
+            <span class="n">val_map</span><span class="p">[</span><span class="n">val</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">val_map</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

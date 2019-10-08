@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.files &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.api.files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.api.files</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">import</span> <span class="nn">gzip</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">iceberg.exceptions</span> <span class="k">import</span> <span class="n">AlreadyExistsException</span>
+
+<span class="kn">from</span> <span class="nn">.expressions</span> <span class="k">import</span> <span class="n">JAVA_MAX_INT</span>
+<span class="kn">from</span> <span class="nn">.io</span> <span class="k">import</span> <span class="p">(</span><span class="n">InputFile</span><span class="p">,</span>
+                 <span class="n">OutputFile</span><span class="p">,</span>
+                 <span class="n">PositionOutputStream</span><span class="p">,</span>
+                 <span class="n">SeekableInputStream</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Files"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.Files">[docs]</a><span class="k">class</span> <span class="nc">Files</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Files.local_output"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.Files.local_output">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_output</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">LocalOutputFile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Files.local_input"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.Files.local_input">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">local_input</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">LocalInputFile</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="LocalOutputFile"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.LocalOutputFile">[docs]</a><span class="k">class</span> <span class="nc">LocalOutputFile</span><span class="p">(</span><span class="n">OutputFile</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">file</span>
+
+<div class="viewcode-block" id="LocalOutputFile.create"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.LocalOutputFile.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">AlreadyExistsException</span><span class="p">(</span><span class="s2">&quot;File already exists: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">PositionOutputStream</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="LocalOutputFile.create_or_overwrite"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.LocalOutputFile.create_or_overwrite">[docs]</a>    <span class="k">def</span> <span class="nf">create_or_overwrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;File deleting file: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LocalOutputFile.location"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.LocalOutputFile.location">[docs]</a>    <span class="k">def</span> <span class="nf">location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LocalInputFile"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.LocalInputFile">[docs]</a><span class="k">class</span> <span class="nc">LocalInputFile</span><span class="p">(</span><span class="n">InputFile</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file</span> <span class="o">=</span> <span class="n">file</span>
+
+<div class="viewcode-block" id="LocalInputFile.get_length"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.LocalInputFile.get_length">[docs]</a>    <span class="k">def</span> <span class="nf">get_length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LocalInputFile.new_stream"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.LocalInputFile.new_stream">[docs]</a>    <span class="k">def</span> <span class="nf">new_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gzipped</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">gzipped</span><span class="p">:</span>
+                <span class="n">fo</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">fileobj</span><span class="o">=</span><span class="n">fo</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">fo</span></div>
+
+<div class="viewcode-block" id="LocalInputFile.location"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.LocalInputFile.location">[docs]</a>    <span class="k">def</span> <span class="nf">location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">file</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="SeekableFileInputStream"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.SeekableFileInputStream">[docs]</a><span class="k">class</span> <span class="nc">SeekableFileInputStream</span><span class="p">(</span><span class="n">SeekableInputStream</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stream</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span>
+
+<div class="viewcode-block" id="SeekableFileInputStream.get_pos"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.SeekableFileInputStream.get_pos">[docs]</a>    <span class="k">def</span> <span class="nf">get_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SeekableFileInputStream.seek"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.SeekableFileInputStream.seek">[docs]</a>    <span class="k">def</span> <span class="nf">seek</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pos</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">new_pos</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SeekableFileInputStream.read"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.SeekableFileInputStream.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">off</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">read_len</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">off</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">read_len</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">b</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;supplied byte field is None&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">off</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">read_len</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_b</span><span class="p">),</span> <span class="n">new_b</span>
+
+        <span class="k">if</span> <span class="n">off</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">read_len</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">off</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">read_len</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid args: read_len(</span><span class="si">%s</span><span class="s2">), off(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">read_len</span><span class="p">,</span> <span class="n">off</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">read_len</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">off</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">off</span> <span class="o">&lt;</span> <span class="n">read_len</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid args: read_len(</span><span class="si">%s</span><span class="s2">), off(</span><span class="si">%s</span><span class="s2">), len_b_offset(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">read_len</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">off</span><span class="p">))</span>
+
+        <span class="n">new_b</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">read_len</span><span class="p">),</span> <span class="s2">&quot;utf8&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">off</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">new_b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">off</span><span class="p">]</span> <span class="o">+</span> <span class="n">new_b</span>
+        <span class="k">if</span> <span class="n">off</span> <span class="o">+</span> <span class="n">read_len</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+            <span class="n">new_b</span> <span class="o">=</span> <span class="n">new_b</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">off</span> <span class="o">+</span> <span class="n">read_len</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="n">read_len</span><span class="p">,</span> <span class="n">new_b</span></div>
+
+<div class="viewcode-block" id="SeekableFileInputStream.skip"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.files.SeekableFileInputStream.skip">[docs]</a>    <span class="k">def</span> <span class="nf">skip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">JAVA_MAX_INT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">JAVA_MAX_INT</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">n</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,492 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.partition_spec &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.api.partition_spec</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.api.partition_spec</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="k">import</span> <span class="n">quote_plus</span>
+
+<span class="kn">from</span> <span class="nn">iceberg.exceptions</span> <span class="k">import</span> <span class="n">ValidationException</span>
+
+<span class="kn">from</span> <span class="nn">.partition_field</span> <span class="k">import</span> <span class="n">PartitionField</span>
+<span class="kn">from</span> <span class="nn">.schema</span> <span class="k">import</span> <span class="n">Schema</span>
+<span class="kn">from</span> <span class="nn">.transforms</span> <span class="k">import</span> <span class="n">Transforms</span>
+<span class="kn">from</span> <span class="nn">.types</span> <span class="k">import</span> <span class="p">(</span><span class="n">NestedField</span><span class="p">,</span>
+                    <span class="n">StructType</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="PartitionSpec"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec">[docs]</a><span class="k">class</span> <span class="nc">PartitionSpec</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">PARTITION_DATA_ID_START</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<div class="viewcode-block" id="PartitionSpec.UNPARTITIONED_SPEC"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.UNPARTITIONED_SPEC">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">UNPARTITIONED_SPEC</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">PartitionSpec</span><span class="p">(</span><span class="n">Schema</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[])</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.unpartitioned"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.unpartitioned">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">unpartitioned</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">PartitionSpec</span><span class="o">.</span><span class="n">UNPARTITIONED_SPEC</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">spec_id</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_source_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_name</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__java_classes</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_list</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec_id</span> <span class="o">=</span> <span class="n">spec_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lazy_field_list</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">java_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__java_classes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__java_classes</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">):</span>
+            <span class="n">source_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">find_type</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">source_id</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">transform</span><span class="p">()</span><span class="o">.</span><span class="n">get_result_by_type</span><span class="p">(</span><span class="n">source_type</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__java_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">type_id</span><span class="o">.</span><span class="n">java_class</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__java_classes</span>
+
+<div class="viewcode-block" id="PartitionSpec.get_field_by_source_id"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.get_field_by_source_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_field_by_source_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lazy_fields_by_source_id</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.partition_type"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.partition_type">[docs]</a>    <span class="k">def</span> <span class="nf">partition_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">struct_fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">):</span>
+            <span class="n">source_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">find_type</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">source_id</span><span class="p">)</span>
+            <span class="n">result_type</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">get_result_type</span><span class="p">(</span><span class="n">source_type</span><span class="p">)</span>
+            <span class="n">struct_fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NestedField</span><span class="o">.</span><span class="n">optional</span><span class="p">(</span><span class="n">PartitionSpec</span><span class="o">.</span><span class="n">PARTITION_DATA_ID_START</span> <span class="o">+</span> <span class="n">i</span><span class="p">,</span>
+                                                      <span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                      <span class="n">result_type</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">StructType</span><span class="o">.</span><span class="n">of</span><span class="p">(</span><span class="n">struct_fields</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.get"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">java_class</span><span class="p">):</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">java_class</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.escape"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.escape">[docs]</a>    <span class="k">def</span> <span class="nf">escape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">quote_plus</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.partition_to_path"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.partition_to_path">[docs]</a>    <span class="k">def</span> <span class="nf">partition_to_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">sb</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">java_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">java_classes</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">jclass</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">java_classes</span><span class="p">):</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">value_string</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">transform</span><span class="p">()</span><span class="o">.</span><span class="n">to_human_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">jclass</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">sb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="n">sb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">sb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+            <span class="n">sb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">value_string</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sb</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.compatible_with"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.compatible_with">[docs]</a>    <span class="k">def</span> <span class="nf">compatible_with</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__fields</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">):</span>
+            <span class="n">that_field</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">__fields</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">source_id</span> <span class="o">!=</span> <span class="n">that_field</span><span class="o">.</span><span class="n">source_id</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">transform</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">that_field</span><span class="o">.</span><span class="n">transform</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.lazy_fields_by_source_id"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.lazy_fields_by_source_id">[docs]</a>    <span class="k">def</span> <span class="nf">lazy_fields_by_source_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_source_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_source_id</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_source_id</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">source_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_source_id</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.identity_source_ids"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.identity_source_ids">[docs]</a>    <span class="k">def</span> <span class="nf">identity_source_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">source_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;identity&quot;</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">transform</span><span class="p">()):</span>
+                <span class="n">source_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">source_ids</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.lazy_field_list"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.lazy_field_list">[docs]</a>    <span class="k">def</span> <span class="nf">lazy_field_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_list</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.lazy_fields_by_source_name"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.lazy_fields_by_source_name">[docs]</a>    <span class="k">def</span> <span class="nf">lazy_fields_by_source_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_name</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_name</span><span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields_by_name</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">PartitionSpec</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fields</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">__fields</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__key</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">__key</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">PartitionSpec</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sb</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;[&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">:</span>
+            <span class="n">sb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{name}</span><span class="s2">: </span><span class="si">{transform}</span><span class="s2">(</span><span class="si">{source_id}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                                                   <span class="n">transform</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">transform</span><span class="p">),</span>
+                                                                   <span class="n">source_id</span><span class="o">=</span><span class="n">field</span><span class="o">.</span><span class="n">source_id</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__fields</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sb</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sb</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PartitionSpec.builder_for"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.builder_for">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">builder_for</span><span class="p">(</span><span class="n">schema</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">PartitionSpecBuilder</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PartitionSpec.check_compatibility"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpec.check_compatibility">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_compatibility</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">spec</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+            <span class="n">src_type</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">find_type</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">source_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">src_type</span><span class="o">.</span><span class="n">is_primitive_type</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="n">ValidationException</span><span class="p">(</span><span class="s2">&quot;Cannot partition by non-primitive source field: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">src_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">field</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">can_transform</span><span class="p">(</span><span class="n">src_type</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ValidationException</span><span class="p">(</span><span class="s2">&quot;Invalid source type </span><span class="si">%s</span><span class="s2"> for transform: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">src_type</span><span class="p">,</span> <span class="n">field</span><span class="o">.</span><span class="n">transform</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="PartitionSpecBuilder"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder">[docs]</a><span class="k">class</span> <span class="nc">PartitionSpecBuilder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schema</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">schema</span> <span class="o">=</span> <span class="n">schema</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">partition_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec_id</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.with_spec_id"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.with_spec_id">[docs]</a>    <span class="k">def</span> <span class="nf">with_spec_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec_id</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec_id</span> <span class="o">=</span> <span class="n">spec_id</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.check_and_add_partition_name"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.check_and_add_partition_name">[docs]</a>    <span class="k">def</span> <span class="nf">check_and_add_partition_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot use empty or null partition name&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">partition_names</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot use partition names more than once: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">partition_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.find_source_column"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.find_source_column">[docs]</a>    <span class="k">def</span> <span class="nf">find_source_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">):</span>
+        <span class="n">source_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">find_field</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">source_column</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot find source column: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">source_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">source_column</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.identity"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.identity">[docs]</a>    <span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_and_add_partition_name</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="n">source_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_source_column</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PartitionField</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">field_id</span><span class="p">,</span>
+                                          <span class="n">source_name</span><span class="p">,</span>
+                                          <span class="n">Transforms</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">type</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.year"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.year">[docs]</a>    <span class="k">def</span> <span class="nf">year</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_year&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_and_add_partition_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">source_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_source_column</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PartitionField</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">field_id</span><span class="p">,</span>
+                                          <span class="n">source_name</span><span class="p">,</span>
+                                          <span class="n">Transforms</span><span class="o">.</span><span class="n">year</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">types</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.month"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.month">[docs]</a>    <span class="k">def</span> <span class="nf">month</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_month&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_and_add_partition_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">source_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_source_column</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PartitionField</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">field_id</span><span class="p">,</span>
+                                          <span class="n">source_name</span><span class="p">,</span>
+                                          <span class="n">Transforms</span><span class="o">.</span><span class="n">month</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">types</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.day"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.day">[docs]</a>    <span class="k">def</span> <span class="nf">day</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_day&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_and_add_partition_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">source_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_source_column</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PartitionField</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">field_id</span><span class="p">,</span>
+                                          <span class="n">source_name</span><span class="p">,</span>
+                                          <span class="n">Transforms</span><span class="o">.</span><span class="n">day</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">types</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.hour"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.hour">[docs]</a>    <span class="k">def</span> <span class="nf">hour</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_hour&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_and_add_partition_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">source_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_source_column</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PartitionField</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">field_id</span><span class="p">,</span>
+                                          <span class="n">source_name</span><span class="p">,</span>
+                                          <span class="n">Transforms</span><span class="o">.</span><span class="n">hour</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">type</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.bucket"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.bucket">[docs]</a>    <span class="k">def</span> <span class="nf">bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">,</span> <span class="n">num_buckets</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_bucket&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_and_add_partition_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">source_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_source_column</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PartitionField</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">field_id</span><span class="p">,</span>
+                                          <span class="n">source_name</span><span class="p">,</span>
+                                          <span class="n">Transforms</span><span class="o">.</span><span class="n">bucket</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">num_buckets</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.truncate"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.truncate">[docs]</a>    <span class="k">def</span> <span class="nf">truncate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_name</span><span class="p">,</span> <span class="n">width</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_truncate&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_and_add_partition_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">source_column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_source_column</span><span class="p">(</span><span class="n">source_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PartitionField</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">field_id</span><span class="p">,</span>
+                                          <span class="n">source_name</span><span class="p">,</span>
+                                          <span class="n">Transforms</span><span class="o">.</span><span class="n">truncate</span><span class="p">(</span><span class="n">source_column</span><span class="o">.</span><span class="n">types</span><span class="p">,</span> <span class="n">width</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.add"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_id</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">transform</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_and_add_partition_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">find_field</span><span class="p">(</span><span class="n">source_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot find source column: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">source_id</span><span class="p">)</span>
+
+        <span class="n">transform_obj</span> <span class="o">=</span> <span class="n">Transforms</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span><span class="n">column</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">transform</span><span class="p">)</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">PartitionField</span><span class="p">(</span><span class="n">source_id</span><span class="p">,</span>
+                               <span class="n">name</span><span class="p">,</span>
+                               <span class="n">transform_obj</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PartitionSpecBuilder.build"><a class="viewcode-back" href="../../../iceberg.api.html#iceberg.api.partition_spec.PartitionSpecBuilder.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="n">PartitionSpec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">)</span>
+        <span class="n">PartitionSpec</span><span class="o">.</span><span class="n">check_compatibility</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">spec</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.io package &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="iceberg.api.transforms package" href="iceberg.api.transforms.html" />
+    <link rel="prev" title="iceberg.api.expressions.java_variables package" href="iceberg.api.expressions.java_variables.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="iceberg.api.html">iceberg.api package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="iceberg.api.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.expressions.html">iceberg.api.expressions package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">iceberg.api.io package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.closeable_group">iceberg.api.io.closeable_group module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.closeable_iterable">iceberg.api.io.closeable_iterable module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.delegating_input_stream">iceberg.api.io.delegating_input_stream module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.delegating_output_stream">iceberg.api.io.delegating_output_stream module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.file_appender">iceberg.api.io.file_appender module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.input_file">iceberg.api.io.input_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.output_file">iceberg.api.io.output_file module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.position_output_stream">iceberg.api.io.position_output_stream module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io.seekable_input_stream">iceberg.api.io.seekable_input_stream module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.io">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.transforms.html">iceberg.api.transforms package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.types.html">iceberg.api.types package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.append_files">iceberg.api.append_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.combined_scan_task">iceberg.api.combined_scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.data_file">iceberg.api.data_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.data_operations">iceberg.api.data_operations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.delete_files">iceberg.api.delete_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.expire_snapshots">iceberg.api.expire_snapshots module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.file_format">iceberg.api.file_format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.file_scan_task">iceberg.api.file_scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.files">iceberg.api.files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.filterable">iceberg.api.filterable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.filtered_snapshot">iceberg.api.filtered_snapshot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.manifest_file">iceberg.api.manifest_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.metrics">iceberg.api.metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.overwrite_files">iceberg.api.overwrite_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.partition_field">iceberg.api.partition_field module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.partition_spec">iceberg.api.partition_spec module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.pending_update">iceberg.api.pending_update module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.replace_partitions">iceberg.api.replace_partitions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.rewrite_files">iceberg.api.rewrite_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.rollback">iceberg.api.rollback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.scan_task">iceberg.api.scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.schema">iceberg.api.schema module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.snapshot">iceberg.api.snapshot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.snapshot_iterable">iceberg.api.snapshot_iterable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.struct_like">iceberg.api.struct_like module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.table">iceberg.api.table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.table_scan">iceberg.api.table_scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.tables">iceberg.api.tables module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.transaction">iceberg.api.transaction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.update_properties">iceberg.api.update_properties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.update_schema">iceberg.api.update_schema module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="iceberg.api.html">iceberg.api package</a> &raquo;</li>
+        
+      <li>iceberg.api.io package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/iceberg.api.io.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="iceberg-api-io-package">
+<h1>iceberg.api.io package<a class="headerlink" href="#iceberg-api-io-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-iceberg.api.io.closeable_group">
+<span id="iceberg-api-io-closeable-group-module"></span><h2>iceberg.api.io.closeable_group module<a class="headerlink" href="#module-iceberg.api.io.closeable_group" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.closeable_group.CloseableGroup">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.closeable_group.</code><code class="sig-name descname">CloseableGroup</code><a class="reference internal" href="_modules/iceberg/api/io/closeable_group.html#CloseableGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.closeable_group.CloseableGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.closeable_group.CloseableGroup.add_closeable">
+<code class="sig-name descname">add_closeable</code><span class="sig-paren">(</span><em class="sig-param">closeable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/closeable_group.html#CloseableGroup.add_closeable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.closeable_group.CloseableGroup.add_closeable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.closeable_group.CloseableGroup.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/closeable_group.html#CloseableGroup.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.closeable_group.CloseableGroup.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io.closeable_iterable">
+<span id="iceberg-api-io-closeable-iterable-module"></span><h2>iceberg.api.io.closeable_iterable module<a class="headerlink" href="#module-iceberg.api.io.closeable_iterable" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.closeable_iterable.CloseableIterable">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.closeable_iterable.</code><code class="sig-name descname">CloseableIterable</code><a class="reference internal" href="_modules/iceberg/api/io/closeable_iterable.html#CloseableIterable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.closeable_iterable.CloseableIterable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Iterator</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.closeable_iterable.CloseableIterable.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/closeable_iterable.html#CloseableIterable.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.closeable_iterable.CloseableIterable.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.closeable_iterable.CloseableIterable.next">
+<code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/closeable_iterable.html#CloseableIterable.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.closeable_iterable.CloseableIterable.next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io.delegating_input_stream">
+<span id="iceberg-api-io-delegating-input-stream-module"></span><h2>iceberg.api.io.delegating_input_stream module<a class="headerlink" href="#module-iceberg.api.io.delegating_input_stream" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.delegating_input_stream.DelegatingInputStream">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.delegating_input_stream.</code><code class="sig-name descname">DelegatingInputStream</code><a class="reference internal" href="_modules/iceberg/api/io/delegating_input_stream.html#DelegatingInputStream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.delegating_input_stream.DelegatingInputStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.delegating_input_stream.DelegatingInputStream.get_delegate">
+<code class="sig-name descname">get_delegate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/delegating_input_stream.html#DelegatingInputStream.get_delegate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.delegating_input_stream.DelegatingInputStream.get_delegate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io.delegating_output_stream">
+<span id="iceberg-api-io-delegating-output-stream-module"></span><h2>iceberg.api.io.delegating_output_stream module<a class="headerlink" href="#module-iceberg.api.io.delegating_output_stream" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.delegating_output_stream.DelegatingOutputStream">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.delegating_output_stream.</code><code class="sig-name descname">DelegatingOutputStream</code><a class="reference internal" href="_modules/iceberg/api/io/delegating_output_stream.html#DelegatingOutputStream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.delegating_output_stream.DelegatingOutputStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.delegating_output_stream.DelegatingOutputStream.get_delegate">
+<code class="sig-name descname">get_delegate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/delegating_output_stream.html#DelegatingOutputStream.get_delegate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.delegating_output_stream.DelegatingOutputStream.get_delegate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io.file_appender">
+<span id="iceberg-api-io-file-appender-module"></span><h2>iceberg.api.io.file_appender module<a class="headerlink" href="#module-iceberg.api.io.file_appender" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.file_appender.FileAppender">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.file_appender.</code><code class="sig-name descname">FileAppender</code><a class="reference internal" href="_modules/iceberg/api/io/file_appender.html#FileAppender"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.file_appender.FileAppender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.file_appender.FileAppender.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/file_appender.html#FileAppender.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.file_appender.FileAppender.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.file_appender.FileAppender.add_all">
+<code class="sig-name descname">add_all</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/file_appender.html#FileAppender.add_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.file_appender.FileAppender.add_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.file_appender.FileAppender.metrics">
+<code class="sig-name descname">metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/file_appender.html#FileAppender.metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.file_appender.FileAppender.metrics" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io.input_file">
+<span id="iceberg-api-io-input-file-module"></span><h2>iceberg.api.io.input_file module<a class="headerlink" href="#module-iceberg.api.io.input_file" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.input_file.InputFile">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.input_file.</code><code class="sig-name descname">InputFile</code><a class="reference internal" href="_modules/iceberg/api/io/input_file.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.input_file.InputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.input_file.InputFile.get_length">
+<code class="sig-name descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/input_file.html#InputFile.get_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.input_file.InputFile.get_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.input_file.InputFile.location">
+<code class="sig-name descname">location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/input_file.html#InputFile.location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.input_file.InputFile.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.input_file.InputFile.new_stream">
+<code class="sig-name descname">new_stream</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/input_file.html#InputFile.new_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.input_file.InputFile.new_stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io.output_file">
+<span id="iceberg-api-io-output-file-module"></span><h2>iceberg.api.io.output_file module<a class="headerlink" href="#module-iceberg.api.io.output_file" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.output_file.OutputFile">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.output_file.</code><code class="sig-name descname">OutputFile</code><a class="reference internal" href="_modules/iceberg/api/io/output_file.html#OutputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.output_file.OutputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.output_file.OutputFile.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/output_file.html#OutputFile.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.output_file.OutputFile.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.output_file.OutputFile.create_or_overwrite">
+<code class="sig-name descname">create_or_overwrite</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/output_file.html#OutputFile.create_or_overwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.output_file.OutputFile.create_or_overwrite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.output_file.OutputFile.location">
+<code class="sig-name descname">location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/output_file.html#OutputFile.location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.output_file.OutputFile.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io.position_output_stream">
+<span id="iceberg-api-io-position-output-stream-module"></span><h2>iceberg.api.io.position_output_stream module<a class="headerlink" href="#module-iceberg.api.io.position_output_stream" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.position_output_stream.PositionOutputStream">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.position_output_stream.</code><code class="sig-name descname">PositionOutputStream</code><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.position_output_stream.PositionOutputStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.position_output_stream.PositionOutputStream.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.position_output_stream.PositionOutputStream.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.position_output_stream.PositionOutputStream.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.position_output_stream.PositionOutputStream.flush" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.position_output_stream.PositionOutputStream.get_pos">
+<code class="sig-name descname">get_pos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream.get_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.position_output_stream.PositionOutputStream.get_pos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.position_output_stream.PositionOutputStream.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">b</em>, <em class="sig-param">off=None</em>, <em class="sig-param">len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.position_output_stream.PositionOutputStream.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io.seekable_input_stream">
+<span id="iceberg-api-io-seekable-input-stream-module"></span><h2>iceberg.api.io.seekable_input_stream module<a class="headerlink" href="#module-iceberg.api.io.seekable_input_stream" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.seekable_input_stream.</code><code class="sig-name descname">SeekableInputStream</code><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.available">
+<code class="sig-name descname">available</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.available" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.get_pos">
+<code class="sig-name descname">get_pos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.get_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.get_pos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.mark">
+<code class="sig-name descname">mark</code><span class="sig-paren">(</span><em class="sig-param">read_limit</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.mark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.mark" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.mark_supported">
+<code class="sig-name descname">mark_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.mark_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.mark_supported" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">b=None</em>, <em class="sig-param">off=None</em>, <em class="sig-param">len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.seek">
+<code class="sig-name descname">seek</code><span class="sig-paren">(</span><em class="sig-param">new_pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.seek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.seek" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.seekable_input_stream.SeekableInputStream.skip">
+<code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.skip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.seekable_input_stream.SeekableInputStream.skip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.io">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-iceberg.api.io" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.io.CloseableGroup">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.</code><code class="sig-name descname">CloseableGroup</code><a class="reference internal" href="_modules/iceberg/api/io/closeable_group.html#CloseableGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.CloseableGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.CloseableGroup.add_closeable">
+<code class="sig-name descname">add_closeable</code><span class="sig-paren">(</span><em class="sig-param">closeable</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/closeable_group.html#CloseableGroup.add_closeable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.CloseableGroup.add_closeable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.CloseableGroup.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/closeable_group.html#CloseableGroup.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.CloseableGroup.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.io.FileAppender">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.</code><code class="sig-name descname">FileAppender</code><a class="reference internal" href="_modules/iceberg/api/io/file_appender.html#FileAppender"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.FileAppender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.FileAppender.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">d</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/file_appender.html#FileAppender.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.FileAppender.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.FileAppender.add_all">
+<code class="sig-name descname">add_all</code><span class="sig-paren">(</span><em class="sig-param">values</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/file_appender.html#FileAppender.add_all"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.FileAppender.add_all" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.FileAppender.metrics">
+<code class="sig-name descname">metrics</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/file_appender.html#FileAppender.metrics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.FileAppender.metrics" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.io.InputFile">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.</code><code class="sig-name descname">InputFile</code><a class="reference internal" href="_modules/iceberg/api/io/input_file.html#InputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.InputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.InputFile.get_length">
+<code class="sig-name descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/input_file.html#InputFile.get_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.InputFile.get_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.InputFile.location">
+<code class="sig-name descname">location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/input_file.html#InputFile.location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.InputFile.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.InputFile.new_stream">
+<code class="sig-name descname">new_stream</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/input_file.html#InputFile.new_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.InputFile.new_stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.io.OutputFile">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.</code><code class="sig-name descname">OutputFile</code><a class="reference internal" href="_modules/iceberg/api/io/output_file.html#OutputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.OutputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.OutputFile.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/output_file.html#OutputFile.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.OutputFile.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.OutputFile.create_or_overwrite">
+<code class="sig-name descname">create_or_overwrite</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/output_file.html#OutputFile.create_or_overwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.OutputFile.create_or_overwrite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.OutputFile.location">
+<code class="sig-name descname">location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/output_file.html#OutputFile.location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.OutputFile.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.io.PositionOutputStream">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.</code><code class="sig-name descname">PositionOutputStream</code><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.PositionOutputStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.PositionOutputStream.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.PositionOutputStream.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.PositionOutputStream.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.PositionOutputStream.flush" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.PositionOutputStream.get_pos">
+<code class="sig-name descname">get_pos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream.get_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.PositionOutputStream.get_pos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.PositionOutputStream.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">b</em>, <em class="sig-param">off=None</em>, <em class="sig-param">len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/position_output_stream.html#PositionOutputStream.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.PositionOutputStream.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.io.SeekableInputStream">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.io.</code><code class="sig-name descname">SeekableInputStream</code><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.available">
+<code class="sig-name descname">available</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.available"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.available" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.get_pos">
+<code class="sig-name descname">get_pos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.get_pos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.get_pos" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.mark">
+<code class="sig-name descname">mark</code><span class="sig-paren">(</span><em class="sig-param">read_limit</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.mark"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.mark" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.mark_supported">
+<code class="sig-name descname">mark_supported</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.mark_supported"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.mark_supported" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">b=None</em>, <em class="sig-param">off=None</em>, <em class="sig-param">len=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.seek">
+<code class="sig-name descname">seek</code><span class="sig-paren">(</span><em class="sig-param">new_pos</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.seek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.seek" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.io.SeekableInputStream.skip">
+<code class="sig-name descname">skip</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/io/seekable_input_stream.html#SeekableInputStream.skip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.io.SeekableInputStream.skip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="iceberg.api.transforms.html" class="btn btn-neutral float-right" title="iceberg.api.transforms package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="iceberg.api.expressions.java_variables.html" class="btn btn-neutral float-left" title="iceberg.api.expressions.java_variables package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+iceberg.core.avro package
+=========================
+
+Submodules
+----------
+
+iceberg.core.avro.avro\_schema\_util module
+-------------------------------------------
+
+.. automodule:: iceberg.core.avro.avro_schema_util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.avro.avro\_to\_iceberg module
+------------------------------------------
+
+.. automodule:: iceberg.core.avro.avro_to_iceberg
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+iceberg.core.avro.iceberg\_to\_avro module
+------------------------------------------
+
+.. automodule:: iceberg.core.avro.iceberg_to_avro
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: iceberg.core.avro
+   :members:
+   :undoc-members:
+   :show-inheritance:

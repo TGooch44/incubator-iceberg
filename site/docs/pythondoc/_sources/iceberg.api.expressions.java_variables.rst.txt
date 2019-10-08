@@ -1,0 +1,10 @@
+iceberg.api.expressions.java\_variables package
+===============================================
+
+Module contents
+---------------
+
+.. automodule:: iceberg.api.expressions.java_variables
+   :members:
+   :undoc-members:
+   :show-inheritance:

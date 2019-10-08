@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.expressions.java_variables package &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="iceberg.api.io package" href="iceberg.api.io.html" />
+    <link rel="prev" title="iceberg.api.expressions package" href="iceberg.api.expressions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="iceberg.api.html">iceberg.api package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="iceberg.api.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="iceberg.api.expressions.html">iceberg.api.expressions package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="iceberg.api.expressions.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.binder">iceberg.api.expressions.binder module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.evaluator">iceberg.api.expressions.evaluator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.expression">iceberg.api.expressions.expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.expressions">iceberg.api.expressions.expressions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.inclusive_manifest_evaluator">iceberg.api.expressions.inclusive_manifest_evaluator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.inclusive_metrics_evaluator">iceberg.api.expressions.inclusive_metrics_evaluator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.literals">iceberg.api.expressions.literals module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.predicate">iceberg.api.expressions.predicate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.projections">iceberg.api.expressions.projections module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.reference">iceberg.api.expressions.reference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.residual_evaluator">iceberg.api.expressions.residual_evaluator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions.strict_metrics_evaluator">iceberg.api.expressions.strict_metrics_evaluator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="iceberg.api.expressions.html#module-iceberg.api.expressions">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.io.html">iceberg.api.io package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.transforms.html">iceberg.api.transforms package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.types.html">iceberg.api.types package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.append_files">iceberg.api.append_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.combined_scan_task">iceberg.api.combined_scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.data_file">iceberg.api.data_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.data_operations">iceberg.api.data_operations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.delete_files">iceberg.api.delete_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.expire_snapshots">iceberg.api.expire_snapshots module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.file_format">iceberg.api.file_format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.file_scan_task">iceberg.api.file_scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.files">iceberg.api.files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.filterable">iceberg.api.filterable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.filtered_snapshot">iceberg.api.filtered_snapshot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.manifest_file">iceberg.api.manifest_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.metrics">iceberg.api.metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.overwrite_files">iceberg.api.overwrite_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.partition_field">iceberg.api.partition_field module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.partition_spec">iceberg.api.partition_spec module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.pending_update">iceberg.api.pending_update module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.replace_partitions">iceberg.api.replace_partitions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.rewrite_files">iceberg.api.rewrite_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.rollback">iceberg.api.rollback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.scan_task">iceberg.api.scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.schema">iceberg.api.schema module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.snapshot">iceberg.api.snapshot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.snapshot_iterable">iceberg.api.snapshot_iterable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.struct_like">iceberg.api.struct_like module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.table">iceberg.api.table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.table_scan">iceberg.api.table_scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.tables">iceberg.api.tables module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.transaction">iceberg.api.transaction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.update_properties">iceberg.api.update_properties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.update_schema">iceberg.api.update_schema module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="iceberg.api.html">iceberg.api package</a> &raquo;</li>
+        
+          <li><a href="iceberg.api.expressions.html">iceberg.api.expressions package</a> &raquo;</li>
+        
+      <li>iceberg.api.expressions.java_variables package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/iceberg.api.expressions.java_variables.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="iceberg-api-expressions-java-variables-package">
+<h1>iceberg.api.expressions.java_variables package<a class="headerlink" href="#iceberg-api-expressions-java-variables-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-iceberg.api.expressions.java_variables">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-iceberg.api.expressions.java_variables" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="iceberg.api.io.html" class="btn btn-neutral float-right" title="iceberg.api.io package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="iceberg.api.expressions.html" class="btn btn-neutral float-left" title="iceberg.api.expressions package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

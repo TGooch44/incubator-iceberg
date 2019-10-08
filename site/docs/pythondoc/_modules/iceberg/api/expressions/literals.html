@@ -1,0 +1,768 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.expressions.literals &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.api.expressions.literals</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.api.expressions.literals</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">decimal</span> <span class="k">import</span> <span class="p">(</span><span class="n">Decimal</span><span class="p">,</span>
+                     <span class="n">ROUND_HALF_UP</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">import</span> <span class="nn">pytz</span>
+
+
+<span class="kn">from</span> <span class="nn">.expression</span> <span class="k">import</span> <span class="p">(</span><span class="n">FALSE</span><span class="p">,</span>
+                         <span class="n">TRUE</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.java_variables</span> <span class="k">import</span> <span class="p">(</span><span class="n">JAVA_MAX_FLOAT</span><span class="p">,</span>
+                             <span class="n">JAVA_MIN_FLOAT</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..types.type</span> <span class="k">import</span> <span class="n">TypeID</span>
+
+
+<div class="viewcode-block" id="Literals"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.Literals">[docs]</a><span class="k">class</span> <span class="nc">Literals</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="n">EPOCH</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcfromtimestamp</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">EPOCH_DAY</span> <span class="o">=</span> <span class="n">EPOCH</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Literals.from_"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.Literals.from_">[docs]</a>    <span class="nd">@staticmethod</span>  <span class="c1"># noqa: C901</span>
+    <span class="k">def</span> <span class="nf">from_</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot create an expression literal from None&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">BooleanLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MIN_INT</span> <span class="o">&lt;</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MAX_INT</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">IntegerLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">LongLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MIN_FLOAT</span> <span class="o">&lt;</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MAX_FLOAT</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">FloatLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">DoubleLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">StringLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">UUIDLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">BinaryLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">FixedLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unimplemented Type Literal&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Literals.above_max"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.Literals.above_max">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">above_max</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">ABOVE_MAX</span></div>
+
+<div class="viewcode-block" id="Literals.below_min"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.Literals.below_min">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">below_min</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">BELOW_MIN</span></div></div>
+
+
+<div class="viewcode-block" id="Literal"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.Literal">[docs]</a><span class="k">class</span> <span class="nc">Literal</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">JAVA_MAX_INT</span> <span class="o">=</span> <span class="mi">2147483647</span>
+    <span class="n">JAVA_MIN_INT</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2147483648</span>
+    <span class="n">JAVA_MAX_FLOAT</span> <span class="o">=</span> <span class="mf">3.4028235E38</span>
+    <span class="n">JAVA_MIN_FLOAT</span> <span class="o">=</span> <span class="o">-</span><span class="mf">3.4028235E38</span>
+
+<div class="viewcode-block" id="Literal.of"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.Literal.of">[docs]</a>    <span class="nd">@staticmethod</span>  <span class="c1"># noqa: C901</span>
+    <span class="k">def</span> <span class="nf">of</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">BooleanLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MIN_INT</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MAX_INT</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">LongLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">IntegerLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MIN_FLOAT</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MAX_FLOAT</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DoubleLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">FloatLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">StringLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">UUIDLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">FixedLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">bytearray</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">BinaryLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Literal.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.Literal.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="BaseLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BaseLiteral">[docs]</a><span class="k">class</span> <span class="nc">BaseLiteral</span><span class="p">(</span><span class="n">Literal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+<div class="viewcode-block" id="BaseLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BaseLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseLiteral</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;BaseLiteral(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ComparableLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.ComparableLiteral">[docs]</a><span class="k">class</span> <span class="nc">ComparableLiteral</span><span class="p">(</span><span class="n">BaseLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ComparableLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.ComparableLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="AboveMax"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.AboveMax">[docs]</a><span class="k">class</span> <span class="nc">AboveMax</span><span class="p">(</span><span class="n">Literal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AboveMax</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AboveMax.value"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.AboveMax.value">[docs]</a>    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;AboveMax has no value&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AboveMax.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.AboveMax.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot change the type of AboveMax&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;aboveMax&quot;</span></div>
+
+
+<div class="viewcode-block" id="BelowMin"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BelowMin">[docs]</a><span class="k">class</span> <span class="nc">BelowMin</span><span class="p">(</span><span class="n">Literal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BelowMin</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BelowMin.value"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BelowMin.value">[docs]</a>    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;BelowMin has no value&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BelowMin.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BelowMin.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot change the type of BelowMin&quot;</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;belowMin&quot;</span></div>
+
+
+<div class="viewcode-block" id="BooleanLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BooleanLiteral">[docs]</a><span class="k">class</span> <span class="nc">BooleanLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BooleanLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BooleanLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BooleanLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">BOOLEAN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="IntegerLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.IntegerLiteral">[docs]</a><span class="k">class</span> <span class="nc">IntegerLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IntegerLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IntegerLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.IntegerLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">LONG</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LongLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">FloatLiteral</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DoubleLiteral</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DATE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DateLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DECIMAL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                                      <span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;0&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span><span class="p">),</span>
+                                                <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="LongLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.LongLiteral">[docs]</a><span class="k">class</span> <span class="nc">LongLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LongLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LongLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.LongLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">INTEGER</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MAX_INT</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ABOVE_MAX</span>
+            <span class="k">elif</span> <span class="n">Literal</span><span class="o">.</span><span class="n">JAVA_MIN_INT</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">BELOW_MIN</span>
+
+            <span class="k">return</span> <span class="n">IntegerLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">LONG</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">FloatLiteral</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DoubleLiteral</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">TIME</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TimeLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TimestampLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DECIMAL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                                      <span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;0&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span><span class="p">),</span>
+                                                <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="FloatLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.FloatLiteral">[docs]</a><span class="k">class</span> <span class="nc">FloatLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FloatLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FloatLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.FloatLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DoubleLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DECIMAL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                                      <span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;1.&#39;</span><span class="p">),</span>
+                                                <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                                      <span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;0&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span><span class="p">),</span>
+                                                <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="DoubleLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.DoubleLiteral">[docs]</a><span class="k">class</span> <span class="nc">DoubleLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DoubleLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DoubleLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.DoubleLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">FLOAT</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">JAVA_MAX_FLOAT</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ABOVE_MAX</span>
+            <span class="k">elif</span> <span class="n">JAVA_MIN_FLOAT</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">BELOW_MIN</span>
+
+            <span class="k">return</span> <span class="n">FloatLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DOUBLE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DECIMAL</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                                      <span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;1.&#39;</span><span class="p">),</span>
+                                                <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                                      <span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;0&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span><span class="p">),</span>
+                                                <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="DateLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.DateLiteral">[docs]</a><span class="k">class</span> <span class="nc">DateLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DateLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DateLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.DateLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DATE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="TimeLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.TimeLiteral">[docs]</a><span class="k">class</span> <span class="nc">TimeLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimeLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TimeLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.TimeLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">TIME</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="TimestampLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.TimestampLiteral">[docs]</a><span class="k">class</span> <span class="nc">TimestampLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimestampLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TimestampLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.TimestampLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DATE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DateLiteral</span><span class="p">((</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">)</span> <span class="o">-</span> <span class="n">Literals</span><span class="o">.</span><span class="n">EPOCH</span><span class="p">)</span><span class="o">.</span><span class="n">days</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="DecimalLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.DecimalLiteral">[docs]</a><span class="k">class</span> <span class="nc">DecimalLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DecimalLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DecimalLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.DecimalLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DECIMAL</span> <span class="ow">and</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">as_tuple</span><span class="p">()</span><span class="o">.</span><span class="n">exponent</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="StringLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.StringLiteral">[docs]</a><span class="k">class</span> <span class="nc">StringLiteral</span><span class="p">(</span><span class="n">BaseLiteral</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StringLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StringLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.StringLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
+        <span class="kn">import</span> <span class="nn">dateutil.parser</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DATE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DateLiteral</span><span class="p">((</span><span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="n">Literals</span><span class="o">.</span><span class="n">EPOCH</span><span class="p">)</span><span class="o">.</span><span class="n">days</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">TIME</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TimeLiteral</span><span class="p">(</span>
+                <span class="nb">int</span><span class="p">((</span><span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">Literals</span><span class="o">.</span><span class="n">EPOCH</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> &quot;</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">-</span> <span class="n">Literals</span><span class="o">.</span><span class="n">EPOCH</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000000</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">TIMESTAMP</span><span class="p">:</span>
+            <span class="n">timestamp</span> <span class="o">=</span> <span class="n">dateutil</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">EPOCH</span> <span class="o">=</span> <span class="n">Literals</span><span class="o">.</span><span class="n">EPOCH</span>
+            <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">timestamp</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">type_var</span><span class="o">.</span><span class="n">adjust_to_utc</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot convert to </span><span class="si">%s</span><span class="s2"> when string is: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">type_var</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">tzinfo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">EPOCH</span> <span class="o">=</span> <span class="n">EPOCH</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">pytz</span><span class="o">.</span><span class="n">UTC</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">TimestampLiteral</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="n">timestamp</span> <span class="o">-</span> <span class="n">EPOCH</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000000</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">UUID</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">UUIDLiteral</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">DECIMAL</span><span class="p">:</span>
+            <span class="n">dec_val</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">dec_val</span><span class="o">.</span><span class="n">as_tuple</span><span class="p">()</span><span class="o">.</span><span class="n">exponent</span><span class="p">)</span> <span class="o">==</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                                          <span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s1">&#39;1.&#39;</span><span class="p">),</span>
+                                                    <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">DecimalLiteral</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+                                          <span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="n">Decimal</span><span class="p">(</span><span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;0&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">type_var</span><span class="o">.</span><span class="n">scale</span><span class="p">)])</span> <span class="o">+</span> <span class="s2">&quot;1&quot;</span><span class="p">),</span>
+                                                    <span class="n">rounding</span><span class="o">=</span><span class="n">ROUND_HALF_UP</span><span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">StringLiteral</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&quot;&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span></div>
+
+
+<div class="viewcode-block" id="UUIDLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.UUIDLiteral">[docs]</a><span class="k">class</span> <span class="nc">UUIDLiteral</span><span class="p">(</span><span class="n">ComparableLiteral</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UUIDLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="UUIDLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.UUIDLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">UUID</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div></div>
+
+
+<div class="viewcode-block" id="FixedLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.FixedLiteral">[docs]</a><span class="k">class</span> <span class="nc">FixedLiteral</span><span class="p">(</span><span class="n">BaseLiteral</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FixedLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FixedLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.FixedLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">FIXED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">type_var</span><span class="o">.</span><span class="n">length</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">BINARY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BinaryLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FixedLiteral.write_replace"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.FixedLiteral.write_replace">[docs]</a>    <span class="k">def</span> <span class="nf">write_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FixedLiteralProxy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="BinaryLiteral"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BinaryLiteral">[docs]</a><span class="k">class</span> <span class="nc">BinaryLiteral</span><span class="p">(</span><span class="n">BaseLiteral</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BinaryLiteral</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BinaryLiteral.to"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BinaryLiteral.to">[docs]</a>    <span class="k">def</span> <span class="nf">to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_var</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">FIXED</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">type_var</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">FixedLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">type_var</span><span class="o">.</span><span class="n">type_id</span> <span class="o">==</span> <span class="n">TypeID</span><span class="o">.</span><span class="n">BINARY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="BinaryLiteral.write_replace"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BinaryLiteral.write_replace">[docs]</a>    <span class="k">def</span> <span class="nf">write_replace</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">BinaryLiteralProxy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="FixedLiteralProxy"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.FixedLiteralProxy">[docs]</a><span class="k">class</span> <span class="nc">FixedLiteralProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">buffer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bytes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FixedLiteralProxy.read_resolve"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.FixedLiteralProxy.read_resolve">[docs]</a>    <span class="k">def</span> <span class="nf">read_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">FixedLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ConstantExpressionProxy"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.ConstantExpressionProxy">[docs]</a><span class="k">class</span> <span class="nc">ConstantExpressionProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">true_or_false</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">true_or_false</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">true_or_false</span> <span class="o">=</span> <span class="n">true_or_false</span>
+
+<div class="viewcode-block" id="ConstantExpressionProxy.read_resolve"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.ConstantExpressionProxy.read_resolve">[docs]</a>    <span class="k">def</span> <span class="nf">read_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">true_or_false</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TRUE</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">FALSE</span></div></div>
+
+
+<div class="viewcode-block" id="BinaryLiteralProxy"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BinaryLiteralProxy">[docs]</a><span class="k">class</span> <span class="nc">BinaryLiteralProxy</span><span class="p">(</span><span class="n">FixedLiteralProxy</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">BinaryLiteralProxy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BinaryLiteralProxy.read_resolve"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.literals.BinaryLiteralProxy.read_resolve">[docs]</a>    <span class="k">def</span> <span class="nf">read_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">BinaryLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bytes</span><span class="p">)</span></div></div>
+
+
+<span class="n">ABOVE_MAX</span> <span class="o">=</span> <span class="n">AboveMax</span><span class="p">()</span>
+<span class="n">BELOW_MIN</span> <span class="o">=</span> <span class="n">BelowMin</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

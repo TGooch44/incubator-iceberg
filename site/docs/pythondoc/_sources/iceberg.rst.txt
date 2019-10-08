@@ -1,0 +1,19 @@
+iceberg package
+===============
+
+Subpackages
+-----------
+
+.. toctree::
+
+   iceberg.api
+   iceberg.core
+   iceberg.exceptions
+
+Module contents
+---------------
+
+.. automodule:: iceberg
+   :members:
+   :undoc-members:
+   :show-inheritance:

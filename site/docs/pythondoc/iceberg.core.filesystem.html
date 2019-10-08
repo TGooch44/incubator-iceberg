@@ -1,0 +1,995 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.core.filesystem package &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="iceberg.core.util package" href="iceberg.core.util.html" />
+    <link rel="prev" title="iceberg.core.avro package" href="iceberg.core.avro.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="iceberg.core.html">iceberg.core package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="iceberg.core.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="iceberg.core.avro.html">iceberg.core.avro package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">iceberg.core.filesystem package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.core.filesystem.file_status">iceberg.core.filesystem.file_status module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.core.filesystem.file_system">iceberg.core.filesystem.file_system module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.core.filesystem.filesystem_table_operations">iceberg.core.filesystem.filesystem_table_operations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.core.filesystem.filesystem_tables">iceberg.core.filesystem.filesystem_tables module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.core.filesystem.local_filesystem">iceberg.core.filesystem.local_filesystem module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.core.filesystem.s3_filesystem">iceberg.core.filesystem.s3_filesystem module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.core.filesystem.util">iceberg.core.filesystem.util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.core.filesystem">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="iceberg.core.util.html">iceberg.core.util package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.base_combined_scan_task">iceberg.core.base_combined_scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.base_file_scan_task">iceberg.core.base_file_scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.base_metastore_table_operations">iceberg.core.base_metastore_table_operations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.base_metastore_tables">iceberg.core.base_metastore_tables module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.base_snapshot">iceberg.core.base_snapshot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.base_table">iceberg.core.base_table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.base_table_scan">iceberg.core.base_table_scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.base_transaction">iceberg.core.base_transaction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.config_properties">iceberg.core.config_properties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.data_files">iceberg.core.data_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.data_table_scan">iceberg.core.data_table_scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.filtered_manifest">iceberg.core.filtered_manifest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.generic_data_file">iceberg.core.generic_data_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.generic_manifest_file">iceberg.core.generic_manifest_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.generic_partition_field_summary">iceberg.core.generic_partition_field_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.manifest_entry">iceberg.core.manifest_entry module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.manifest_list_writer">iceberg.core.manifest_list_writer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.manifest_reader">iceberg.core.manifest_reader module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.partition_data">iceberg.core.partition_data module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.partition_spec_parser">iceberg.core.partition_spec_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.partition_summary">iceberg.core.partition_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#iceberg-core-scan-summary-module">iceberg.core.scan_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.schema_parser">iceberg.core.schema_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.schema_update">iceberg.core.schema_update module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.snapshot_parser">iceberg.core.snapshot_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.table_metadata">iceberg.core.table_metadata module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.table_metadata_parser">iceberg.core.table_metadata_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.table_operations">iceberg.core.table_operations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core.table_properties">iceberg.core.table_properties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.core.html#module-iceberg.core">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="iceberg.core.html">iceberg.core package</a> &raquo;</li>
+        
+      <li>iceberg.core.filesystem package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/iceberg.core.filesystem.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="iceberg-core-filesystem-package">
+<h1>iceberg.core.filesystem package<a class="headerlink" href="#iceberg-core-filesystem-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-iceberg.core.filesystem.file_status">
+<span id="iceberg-core-filesystem-file-status-module"></span><h2>iceberg.core.filesystem.file_status module<a class="headerlink" href="#module-iceberg.core.filesystem.file_status" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.core.filesystem.file_status.FileStatus">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.file_status.</code><code class="sig-name descname">FileStatus</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">length=None</em>, <em class="sig-param">is_dir=None</em>, <em class="sig-param">block_replication=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">modification_time=None</em>, <em class="sig-param">access_time=None</em>, <em class="sig-param">permission=None</em>, <em class="sig-param">owner=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">symlink=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_status.html#FileStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_status.FileStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.core.filesystem.file_system">
+<span id="iceberg-core-filesystem-file-system-module"></span><h2>iceberg.core.filesystem.file_system module<a class="headerlink" href="#module-iceberg.core.filesystem.file_system" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.core.filesystem.file_system.FileSystem">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.file_system.</code><code class="sig-name descname">FileSystem</code><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystem.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystem.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystem.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystem.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystem.exists">
+<code class="sig-name descname">exists</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystem.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystem.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystem.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystem.rename">
+<code class="sig-name descname">rename</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dest</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystem.rename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystem.stat">
+<code class="sig-name descname">stat</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystem.stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.file_system.FileSystemInputFile">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.file_system.</code><code class="sig-name descname">FileSystemInputFile</code><span class="sig-paren">(</span><em class="sig-param">fs</em>, <em class="sig-param">path</em>, <em class="sig-param">conf</em>, <em class="sig-param">length=None</em>, <em class="sig-param">stat=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemInputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iceberg.api.io.html#iceberg.api.io.input_file.InputFile" title="iceberg.api.io.input_file.InputFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.io.input_file.InputFile</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemInputFile.from_location">
+<em class="property">static </em><code class="sig-name descname">from_location</code><span class="sig-paren">(</span><em class="sig-param">location</em>, <em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.from_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemInputFile.from_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemInputFile.get_length">
+<code class="sig-name descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.get_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemInputFile.get_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemInputFile.get_stat">
+<code class="sig-name descname">get_stat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.get_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemInputFile.get_stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemInputFile.lazy_stat">
+<code class="sig-name descname">lazy_stat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.lazy_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemInputFile.lazy_stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemInputFile.location">
+<code class="sig-name descname">location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemInputFile.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemInputFile.new_fo">
+<code class="sig-name descname">new_fo</code><span class="sig-paren">(</span><em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.new_fo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemInputFile.new_fo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemInputFile.new_stream">
+<code class="sig-name descname">new_stream</code><span class="sig-paren">(</span><em class="sig-param">gzipped=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.new_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemInputFile.new_stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.file_system.FileSystemOutputFile">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.file_system.</code><code class="sig-name descname">FileSystemOutputFile</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemOutputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iceberg.api.io.html#iceberg.api.io.output_file.OutputFile" title="iceberg.api.io.output_file.OutputFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.io.output_file.OutputFile</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemOutputFile.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">mode='w'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemOutputFile.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemOutputFile.create_or_overwrite">
+<code class="sig-name descname">create_or_overwrite</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile.create_or_overwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemOutputFile.create_or_overwrite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemOutputFile.from_path">
+<em class="property">static </em><code class="sig-name descname">from_path</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile.from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemOutputFile.from_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.file_system.FileSystemOutputFile.location">
+<code class="sig-name descname">location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile.location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.file_system.FileSystemOutputFile.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.core.filesystem.filesystem_table_operations">
+<span id="iceberg-core-filesystem-filesystem-table-operations-module"></span><h2>iceberg.core.filesystem.filesystem_table_operations module<a class="headerlink" href="#module-iceberg.core.filesystem.filesystem_table_operations" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.filesystem_table_operations.</code><code class="sig-name descname">FilesystemTableOperations</code><span class="sig-paren">(</span><em class="sig-param">location</em>, <em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iceberg.core.html#iceberg.core.table_operations.TableOperations" title="iceberg.core.table_operations.TableOperations"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.core.table_operations.TableOperations</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.commit">
+<code class="sig-name descname">commit</code><span class="sig-paren">(</span><em class="sig-param">base</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.commit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.current">
+<code class="sig-name descname">current</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.current"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.current" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.delete_file">
+<code class="sig-name descname">delete_file</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.delete_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.delete_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.metadata_file">
+<code class="sig-name descname">metadata_file</code><span class="sig-paren">(</span><em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.metadata_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.metadata_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.metadata_file_location">
+<code class="sig-name descname">metadata_file_location</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.metadata_file_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.metadata_file_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.metadata_path">
+<code class="sig-name descname">metadata_path</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.metadata_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.metadata_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.new_input_file">
+<code class="sig-name descname">new_input_file</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.new_input_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.new_input_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.new_metadata_file">
+<code class="sig-name descname">new_metadata_file</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.new_metadata_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.new_metadata_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.new_output_file">
+<code class="sig-name descname">new_output_file</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.new_output_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.new_output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.new_snapshot_id">
+<code class="sig-name descname">new_snapshot_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.new_snapshot_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.new_snapshot_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.read_version_hint">
+<code class="sig-name descname">read_version_hint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.read_version_hint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.read_version_hint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.refresh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.version_hint_file">
+<code class="sig-name descname">version_hint_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.version_hint_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.version_hint_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.write_version_hint">
+<code class="sig-name descname">write_version_hint</code><span class="sig-paren">(</span><em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.write_version_hint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_table_operations.FilesystemTableOperations.write_version_hint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.core.filesystem.filesystem_tables">
+<span id="iceberg-core-filesystem-filesystem-tables-module"></span><h2>iceberg.core.filesystem.filesystem_tables module<a class="headerlink" href="#module-iceberg.core.filesystem.filesystem_tables" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.core.filesystem.filesystem_tables.FilesystemTables">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.filesystem_tables.</code><code class="sig-name descname">FilesystemTables</code><span class="sig-paren">(</span><em class="sig-param">conf=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_tables.html#FilesystemTables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_tables.FilesystemTables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iceberg.api.html#iceberg.api.tables.Tables" title="iceberg.api.tables.Tables"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.tables.Tables</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_tables.FilesystemTables.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">schema</em>, <em class="sig-param">table_identifier=None</em>, <em class="sig-param">spec=None</em>, <em class="sig-param">properties=None</em>, <em class="sig-param">location=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_tables.html#FilesystemTables.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_tables.FilesystemTables.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_tables.FilesystemTables.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">location</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_tables.html#FilesystemTables.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_tables.FilesystemTables.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.filesystem_tables.FilesystemTables.new_table_ops">
+<code class="sig-name descname">new_table_ops</code><span class="sig-paren">(</span><em class="sig-param">location</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_tables.html#FilesystemTables.new_table_ops"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.filesystem_tables.FilesystemTables.new_table_ops" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.core.filesystem.local_filesystem">
+<span id="iceberg-core-filesystem-local-filesystem-module"></span><h2>iceberg.core.filesystem.local_filesystem module<a class="headerlink" href="#module-iceberg.core.filesystem.local_filesystem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.local_filesystem.</code><code class="sig-name descname">LocalFileSystem</code><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.core.filesystem.file_system.FileSystem" title="iceberg.core.filesystem.file_system.FileSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.core.filesystem.file_system.FileSystem</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.exists">
+<code class="sig-name descname">exists</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.fix_path">
+<em class="property">static </em><code class="sig-name descname">fix_path</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem.fix_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.fix_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.fs_inst">
+<code class="sig-name descname">fs_inst</code><em class="property"> = None</em><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.fs_inst" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.get_instance">
+<em class="property">static </em><code class="sig-name descname">get_instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem.get_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.rename">
+<code class="sig-name descname">rename</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dest</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem.rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.rename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.local_filesystem.LocalFileSystem.stat">
+<code class="sig-name descname">stat</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/local_filesystem.html#LocalFileSystem.stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.local_filesystem.LocalFileSystem.stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.core.filesystem.s3_filesystem">
+<span id="iceberg-core-filesystem-s3-filesystem-module"></span><h2>iceberg.core.filesystem.s3_filesystem module<a class="headerlink" href="#module-iceberg.core.filesystem.s3_filesystem" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.s3_filesystem.</code><code class="sig-name descname">S3File</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.MAX_CHUNK_SIZE">
+<code class="sig-name descname">MAX_CHUNK_SIZE</code><em class="property"> = 4194304</em><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.MAX_CHUNK_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.MIN_CHUNK_SIZE">
+<code class="sig-name descname">MIN_CHUNK_SIZE</code><em class="property"> = 131072</em><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.MIN_CHUNK_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.flush" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.next">
+<code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">n=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.readline">
+<code class="sig-name descname">readline</code><span class="sig-paren">(</span><em class="sig-param">n=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.readline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.readline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.seek">
+<code class="sig-name descname">seek</code><span class="sig-paren">(</span><em class="sig-param">offset</em>, <em class="sig-param">whence=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.seek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.seek" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.tell">
+<code class="sig-name descname">tell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.tell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.tell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3File.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3File.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.s3_filesystem.</code><code class="sig-name descname">S3FileSystem</code><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.core.filesystem.file_system.FileSystem" title="iceberg.core.filesystem.file_system.FileSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.core.filesystem.file_system.FileSystem</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.exists">
+<code class="sig-name descname">exists</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.fs_inst">
+<code class="sig-name descname">fs_inst</code><em class="property"> = None</em><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.fs_inst" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.get_instance">
+<em class="property">static </em><code class="sig-name descname">get_instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.get_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.info">
+<em class="property">static </em><code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.normalize_s3_path">
+<em class="property">static </em><code class="sig-name descname">normalize_s3_path</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.normalize_s3_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.normalize_s3_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.set_conf">
+<code class="sig-name descname">set_conf</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.set_conf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.set_conf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.set_role">
+<code class="sig-name descname">set_role</code><span class="sig-paren">(</span><em class="sig-param">role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.set_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.set_role" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.s3_filesystem.S3FileSystem.stat">
+<code class="sig-name descname">stat</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.S3FileSystem.stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="iceberg.core.filesystem.s3_filesystem.get_s3">
+<code class="sig-prename descclassname">iceberg.core.filesystem.s3_filesystem.</code><code class="sig-name descname">get_s3</code><span class="sig-paren">(</span><em class="sig-param">obj='resource'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#get_s3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.get_s3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="iceberg.core.filesystem.s3_filesystem.refresh_sts_session_keys">
+<code class="sig-prename descclassname">iceberg.core.filesystem.s3_filesystem.</code><code class="sig-name descname">refresh_sts_session_keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#refresh_sts_session_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.refresh_sts_session_keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="iceberg.core.filesystem.s3_filesystem.url_to_bucket_key_name_tuple">
+<code class="sig-prename descclassname">iceberg.core.filesystem.s3_filesystem.</code><code class="sig-name descname">url_to_bucket_key_name_tuple</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#url_to_bucket_key_name_tuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.s3_filesystem.url_to_bucket_key_name_tuple" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.core.filesystem.util">
+<span id="iceberg-core-filesystem-util-module"></span><h2>iceberg.core.filesystem.util module<a class="headerlink" href="#module-iceberg.core.filesystem.util" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="iceberg.core.filesystem.util.get_fs">
+<code class="sig-prename descclassname">iceberg.core.filesystem.util.</code><code class="sig-name descname">get_fs</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">conf</em>, <em class="sig-param">local_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/util.html#get_fs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.util.get_fs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.core.filesystem">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-iceberg.core.filesystem" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="iceberg.core.filesystem.get_fs">
+<code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">get_fs</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">conf</em>, <em class="sig-param">local_only=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/util.html#get_fs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.get_fs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.FileStatus">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">FileStatus</code><span class="sig-paren">(</span><em class="sig-param">path=None</em>, <em class="sig-param">length=None</em>, <em class="sig-param">is_dir=None</em>, <em class="sig-param">block_replication=None</em>, <em class="sig-param">blocksize=None</em>, <em class="sig-param">modification_time=None</em>, <em class="sig-param">access_time=None</em>, <em class="sig-param">permission=None</em>, <em class="sig-param">owner=None</em>, <em class="sig-param">group=None</em>, <em class="sig-param">symlink=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_status.html#FileStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.FileSystem">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">FileSystem</code><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystem.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">overwrite=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystem.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystem.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystem.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystem.exists">
+<code class="sig-name descname">exists</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystem.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystem.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystem.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystem.rename">
+<code class="sig-name descname">rename</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dest</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.rename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystem.rename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystem.stat">
+<code class="sig-name descname">stat</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystem.stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystem.stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.FileSystemInputFile">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">FileSystemInputFile</code><span class="sig-paren">(</span><em class="sig-param">fs</em>, <em class="sig-param">path</em>, <em class="sig-param">conf</em>, <em class="sig-param">length=None</em>, <em class="sig-param">stat=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemInputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iceberg.api.io.html#iceberg.api.io.input_file.InputFile" title="iceberg.api.io.input_file.InputFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.io.input_file.InputFile</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemInputFile.from_location">
+<em class="property">static </em><code class="sig-name descname">from_location</code><span class="sig-paren">(</span><em class="sig-param">location</em>, <em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.from_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemInputFile.from_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemInputFile.get_length">
+<code class="sig-name descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.get_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemInputFile.get_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemInputFile.get_stat">
+<code class="sig-name descname">get_stat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.get_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemInputFile.get_stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemInputFile.lazy_stat">
+<code class="sig-name descname">lazy_stat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.lazy_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemInputFile.lazy_stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemInputFile.location">
+<code class="sig-name descname">location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemInputFile.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemInputFile.new_fo">
+<code class="sig-name descname">new_fo</code><span class="sig-paren">(</span><em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.new_fo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemInputFile.new_fo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemInputFile.new_stream">
+<code class="sig-name descname">new_stream</code><span class="sig-paren">(</span><em class="sig-param">gzipped=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemInputFile.new_stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemInputFile.new_stream" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.FileSystemOutputFile">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">FileSystemOutputFile</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemOutputFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iceberg.api.io.html#iceberg.api.io.output_file.OutputFile" title="iceberg.api.io.output_file.OutputFile"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.io.output_file.OutputFile</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemOutputFile.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">mode='w'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemOutputFile.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemOutputFile.create_or_overwrite">
+<code class="sig-name descname">create_or_overwrite</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile.create_or_overwrite"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemOutputFile.create_or_overwrite" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemOutputFile.from_path">
+<em class="property">static </em><code class="sig-name descname">from_path</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile.from_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemOutputFile.from_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FileSystemOutputFile.location">
+<code class="sig-name descname">location</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/file_system.html#FileSystemOutputFile.location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FileSystemOutputFile.location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">FilesystemTableOperations</code><span class="sig-paren">(</span><em class="sig-param">location</em>, <em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iceberg.core.html#iceberg.core.table_operations.TableOperations" title="iceberg.core.table_operations.TableOperations"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.core.table_operations.TableOperations</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.commit">
+<code class="sig-name descname">commit</code><span class="sig-paren">(</span><em class="sig-param">base</em>, <em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.commit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.commit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.current">
+<code class="sig-name descname">current</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.current"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.current" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.delete_file">
+<code class="sig-name descname">delete_file</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.delete_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.delete_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.metadata_file">
+<code class="sig-name descname">metadata_file</code><span class="sig-paren">(</span><em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.metadata_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.metadata_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.metadata_file_location">
+<code class="sig-name descname">metadata_file_location</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.metadata_file_location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.metadata_file_location" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.metadata_path">
+<code class="sig-name descname">metadata_path</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.metadata_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.metadata_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.new_input_file">
+<code class="sig-name descname">new_input_file</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.new_input_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.new_input_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.new_metadata_file">
+<code class="sig-name descname">new_metadata_file</code><span class="sig-paren">(</span><em class="sig-param">filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.new_metadata_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.new_metadata_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.new_output_file">
+<code class="sig-name descname">new_output_file</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.new_output_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.new_output_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.new_snapshot_id">
+<code class="sig-name descname">new_snapshot_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.new_snapshot_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.new_snapshot_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.read_version_hint">
+<code class="sig-name descname">read_version_hint</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.read_version_hint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.read_version_hint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.refresh" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.version_hint_file">
+<code class="sig-name descname">version_hint_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.version_hint_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.version_hint_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTableOperations.write_version_hint">
+<code class="sig-name descname">write_version_hint</code><span class="sig-paren">(</span><em class="sig-param">version</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_table_operations.html#FilesystemTableOperations.write_version_hint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTableOperations.write_version_hint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.FilesystemTables">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">FilesystemTables</code><span class="sig-paren">(</span><em class="sig-param">conf=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_tables.html#FilesystemTables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="iceberg.api.html#iceberg.api.tables.Tables" title="iceberg.api.tables.Tables"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.tables.Tables</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTables.create">
+<code class="sig-name descname">create</code><span class="sig-paren">(</span><em class="sig-param">schema</em>, <em class="sig-param">table_identifier=None</em>, <em class="sig-param">spec=None</em>, <em class="sig-param">properties=None</em>, <em class="sig-param">location=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_tables.html#FilesystemTables.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTables.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTables.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">location</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_tables.html#FilesystemTables.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTables.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.FilesystemTables.new_table_ops">
+<code class="sig-name descname">new_table_ops</code><span class="sig-paren">(</span><em class="sig-param">location</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/filesystem_tables.html#FilesystemTables.new_table_ops"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.FilesystemTables.new_table_ops" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.S3File">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">S3File</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="iceberg.core.filesystem.S3File.MAX_CHUNK_SIZE">
+<code class="sig-name descname">MAX_CHUNK_SIZE</code><em class="property"> = 4194304</em><a class="headerlink" href="#iceberg.core.filesystem.S3File.MAX_CHUNK_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.core.filesystem.S3File.MIN_CHUNK_SIZE">
+<code class="sig-name descname">MIN_CHUNK_SIZE</code><em class="property"> = 131072</em><a class="headerlink" href="#iceberg.core.filesystem.S3File.MIN_CHUNK_SIZE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3File.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3File.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File.flush" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3File.next">
+<code class="sig-name descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File.next" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3File.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param">n=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File.read" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3File.readline">
+<code class="sig-name descname">readline</code><span class="sig-paren">(</span><em class="sig-param">n=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.readline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File.readline" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3File.seek">
+<code class="sig-name descname">seek</code><span class="sig-paren">(</span><em class="sig-param">offset</em>, <em class="sig-param">whence=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.seek"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File.seek" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3File.tell">
+<code class="sig-name descname">tell</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.tell"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File.tell" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3File.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3File.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3File.write" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.core.filesystem.S3FileSystem">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.core.filesystem.</code><code class="sig-name descname">S3FileSystem</code><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.core.filesystem.file_system.FileSystem" title="iceberg.core.filesystem.file_system.FileSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.core.filesystem.file_system.FileSystem</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.delete">
+<code class="sig-name descname">delete</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.exists">
+<code class="sig-name descname">exists</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.exists" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.core.filesystem.S3FileSystem.fs_inst">
+<code class="sig-name descname">fs_inst</code><em class="property"> = None</em><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.fs_inst" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.get_instance">
+<em class="property">static </em><code class="sig-name descname">get_instance</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.get_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.get_instance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.info">
+<em class="property">static </em><code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.normalize_s3_path">
+<em class="property">static </em><code class="sig-name descname">normalize_s3_path</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.normalize_s3_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.normalize_s3_path" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">mode='rb'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.set_conf">
+<code class="sig-name descname">set_conf</code><span class="sig-paren">(</span><em class="sig-param">conf</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.set_conf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.set_conf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.set_role">
+<code class="sig-name descname">set_role</code><span class="sig-paren">(</span><em class="sig-param">role</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.set_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.set_role" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.core.filesystem.S3FileSystem.stat">
+<code class="sig-name descname">stat</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/core/filesystem/s3_filesystem.html#S3FileSystem.stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.core.filesystem.S3FileSystem.stat" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="iceberg.core.util.html" class="btn btn-neutral float-right" title="iceberg.core.util package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="iceberg.core.avro.html" class="btn btn-neutral float-left" title="iceberg.core.avro package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

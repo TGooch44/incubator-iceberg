@@ -1,0 +1,1410 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.transforms package &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="iceberg.api.types package" href="iceberg.api.types.html" />
+    <link rel="prev" title="iceberg.api.io package" href="iceberg.api.io.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="iceberg.api.html">iceberg.api package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="iceberg.api.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.expressions.html">iceberg.api.expressions package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.io.html">iceberg.api.io package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">iceberg.api.transforms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.bucket">iceberg.api.transforms.bucket module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.dates">iceberg.api.transforms.dates module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.identity">iceberg.api.transforms.identity module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.projection_util">iceberg.api.transforms.projection_util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.timestamps">iceberg.api.transforms.timestamps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.transform">iceberg.api.transforms.transform module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.transform_util">iceberg.api.transforms.transform_util module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.transforms">iceberg.api.transforms.transforms module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms.truncate">iceberg.api.transforms.truncate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-iceberg.api.transforms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="iceberg.api.types.html">iceberg.api.types package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.append_files">iceberg.api.append_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.combined_scan_task">iceberg.api.combined_scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.data_file">iceberg.api.data_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.data_operations">iceberg.api.data_operations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.delete_files">iceberg.api.delete_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.expire_snapshots">iceberg.api.expire_snapshots module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.file_format">iceberg.api.file_format module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.file_scan_task">iceberg.api.file_scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.files">iceberg.api.files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.filterable">iceberg.api.filterable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.filtered_snapshot">iceberg.api.filtered_snapshot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.manifest_file">iceberg.api.manifest_file module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.metrics">iceberg.api.metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.overwrite_files">iceberg.api.overwrite_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.partition_field">iceberg.api.partition_field module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.partition_spec">iceberg.api.partition_spec module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.pending_update">iceberg.api.pending_update module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.replace_partitions">iceberg.api.replace_partitions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.rewrite_files">iceberg.api.rewrite_files module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.rollback">iceberg.api.rollback module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.scan_task">iceberg.api.scan_task module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.schema">iceberg.api.schema module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.snapshot">iceberg.api.snapshot module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.snapshot_iterable">iceberg.api.snapshot_iterable module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.struct_like">iceberg.api.struct_like module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.table">iceberg.api.table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.table_scan">iceberg.api.table_scan module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.tables">iceberg.api.tables module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.transaction">iceberg.api.transaction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.update_properties">iceberg.api.update_properties module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api.update_schema">iceberg.api.update_schema module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iceberg.api.html#module-iceberg.api">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="iceberg.api.html">iceberg.api package</a> &raquo;</li>
+        
+      <li>iceberg.api.transforms package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/iceberg.api.transforms.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="iceberg-api-transforms-package">
+<h1>iceberg.api.transforms package<a class="headerlink" href="#iceberg-api-transforms-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-iceberg.api.transforms.bucket">
+<span id="iceberg-api-transforms-bucket-module"></span><h2>iceberg.api.transforms.bucket module<a class="headerlink" href="#module-iceberg.api.transforms.bucket" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.Bucket">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">Bucket</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.bucket.Bucket.BUCKET_TYPE">
+<code class="sig-name descname">BUCKET_TYPE</code><em class="property"> = {&lt;TypeID.DATE: {'java_class': 'Integer.class', 'python_class': &lt;class 'int'&gt;, 'id': 6}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.INTEGER: {'java_class': 'Integer.class', 'python_class': &lt;class 'int'&gt;, 'id': 2}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.TIME: {'java_class': 'Long.class', 'python_class': &lt;class 'int'&gt;, 'id': 7}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.TIMESTAMP: {'java_class': 'Long.class', 'python_class': &lt;class 'int'&gt;, 'id': 8}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.LONG: {'java_class': 'Long.class', 'python_class': &lt;class 'int'&gt;, 'id': 3}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.DECIMAL: {'java_class': 'BigDecimal.class', 'python_class': &lt;class 'decimal.Decimal'&gt;, 'id': 13}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.STRING: {'java_class': 'CharSequence.class', 'python_class': &lt;class 'str'&gt;, 'id': 9}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.FIXED: {'java_class': 'ByteBuffer.class', 'python_class': &lt;class 'bytes'&gt;, 'id': 11}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.BINARY: {'java_class': 'ByteBuffer.class', 'python_class': &lt;class 'bytearray'&gt;, 'id': 12}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.UUID: {'java_class': 'java.util.UUID.class', 'python_class': &lt;class 'uuid.UUID'&gt;, 'id': 10}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;}</em><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket.BUCKET_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.bucket.Bucket.MURMUR3">
+<code class="sig-name descname">MURMUR3</code><em class="property"> = &lt;module 'mmh3' from '/Users/tgooch/.pyenv/versions/3.6.9/envs/iceberg_dev_os/lib/python3.6/site-packages/mmh3.cpython-36m-darwin.so'&gt;</em><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket.MURMUR3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.Bucket.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.Bucket.get">
+<em class="property">static </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">type_var</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.Bucket.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.Bucket.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.Bucket.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.Bucket.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.Bucket.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.BucketByteBuffer">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">BucketByteBuffer</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketByteBuffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketByteBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.BucketDecimal">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">BucketDecimal</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDecimal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketDecimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketDecimal.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDecimal.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketDecimal.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketDecimal.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDecimal.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketDecimal.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.BucketDouble">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">BucketDouble</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDouble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketDouble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketDouble.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDouble.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketDouble.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketDouble.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDouble.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketDouble.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.BucketFloat">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">BucketFloat</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketFloat.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketFloat.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketFloat.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketFloat.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketFloat.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketFloat.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.BucketInteger">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">BucketInteger</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketInteger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketInteger.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketInteger.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketInteger.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketInteger.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketInteger.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketInteger.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.BucketLong">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">BucketLong</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketLong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketLong.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketLong.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketLong.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketLong.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketLong.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketLong.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.BucketString">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">BucketString</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketString.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketString.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketString.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.bucket.BucketString.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketString.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketString.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.bucket.BucketUUID">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">BucketUUID</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketUUID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.BucketUUID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="iceberg.api.transforms.bucket.to_bytes">
+<code class="sig-prename descclassname">iceberg.api.transforms.bucket.</code><code class="sig-name descname">to_bytes</code><span class="sig-paren">(</span><em class="sig-param">n</em>, <em class="sig-param">length</em>, <em class="sig-param">byteorder='big'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#to_bytes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.bucket.to_bytes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms.dates">
+<span id="iceberg-api-transforms-dates-module"></span><h2>iceberg.api.transforms.dates module<a class="headerlink" href="#module-iceberg.api.transforms.dates" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.dates.Dates">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.dates.</code><code class="sig-name descname">Dates</code><span class="sig-paren">(</span><em class="sig-param">granularity</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.dates.Dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.dates.Dates.DAY">
+<code class="sig-name descname">DAY</code><em class="property"> = 'day'</em><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.DAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.dates.Dates.EPOCH">
+<code class="sig-name descname">EPOCH</code><em class="property"> = datetime.datetime(1970, 1, 1, 0, 0)</em><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.EPOCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.dates.Dates.HUMAN_FUNCS">
+<code class="sig-name descname">HUMAN_FUNCS</code><em class="property"> = {'day': &lt;function Dates.&lt;lambda&gt;&gt;, 'month': &lt;function Dates.&lt;lambda&gt;&gt;, 'year': &lt;function Dates.&lt;lambda&gt;&gt;}</em><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.HUMAN_FUNCS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.dates.Dates.MONTH">
+<code class="sig-name descname">MONTH</code><em class="property"> = 'month'</em><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.MONTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.dates.Dates.SECONDS_IN_DAY">
+<code class="sig-name descname">SECONDS_IN_DAY</code><em class="property"> = 86400</em><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.SECONDS_IN_DAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.dates.Dates.YEAR">
+<code class="sig-name descname">YEAR</code><em class="property"> = 'year'</em><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.YEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.dates.Dates.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">days</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.dates.Dates.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.dates.Dates.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.dates.Dates.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.dates.Dates.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.dates.Dates.to_human_string">
+<code class="sig-name descname">to_human_string</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.to_human_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.dates.Dates.to_human_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms.identity">
+<span id="iceberg-api-transforms-identity-module"></span><h2>iceberg.api.transforms.identity module<a class="headerlink" href="#module-iceberg.api.transforms.identity" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.identity.Identity">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.identity.</code><code class="sig-name descname">Identity</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.identity.Identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.identity.Identity.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.identity.Identity.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.identity.Identity.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.identity.Identity.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.identity.Identity.get">
+<em class="property">static </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.identity.Identity.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.identity.Identity.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.identity.Identity.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.identity.Identity.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.identity.Identity.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.identity.Identity.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.identity.Identity.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.identity.Identity.to_human_string">
+<code class="sig-name descname">to_human_string</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.to_human_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.identity.Identity.to_human_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms.projection_util">
+<span id="iceberg-api-transforms-projection-util-module"></span><h2>iceberg.api.transforms.projection_util module<a class="headerlink" href="#module-iceberg.api.transforms.projection_util" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.projection_util.ProjectionUtil">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.projection_util.</code><code class="sig-name descname">ProjectionUtil</code><a class="reference internal" href="_modules/iceberg/api/transforms/projection_util.html#ProjectionUtil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.projection_util.ProjectionUtil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.projection_util.ProjectionUtil.truncate_array">
+<code class="sig-name descname">truncate_array</code><span class="sig-paren">(</span><em class="sig-param">pred</em>, <em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/projection_util.html#ProjectionUtil.truncate_array"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.projection_util.ProjectionUtil.truncate_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.projection_util.ProjectionUtil.truncate_decimal">
+<code class="sig-name descname">truncate_decimal</code><span class="sig-paren">(</span><em class="sig-param">pred</em>, <em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/projection_util.html#ProjectionUtil.truncate_decimal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.projection_util.ProjectionUtil.truncate_decimal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.projection_util.ProjectionUtil.truncate_integer">
+<em class="property">static </em><code class="sig-name descname">truncate_integer</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">pred</em>, <em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/projection_util.html#ProjectionUtil.truncate_integer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.projection_util.ProjectionUtil.truncate_integer" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.projection_util.ProjectionUtil.truncate_long">
+<code class="sig-name descname">truncate_long</code><span class="sig-paren">(</span><em class="sig-param">pred</em>, <em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/projection_util.html#ProjectionUtil.truncate_long"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.projection_util.ProjectionUtil.truncate_long" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms.timestamps">
+<span id="iceberg-api-transforms-timestamps-module"></span><h2>iceberg.api.transforms.timestamps module<a class="headerlink" href="#module-iceberg.api.transforms.timestamps" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.timestamps.Timestamps">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.timestamps.</code><code class="sig-name descname">Timestamps</code><span class="sig-paren">(</span><em class="sig-param">granularity</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.DAY">
+<code class="sig-name descname">DAY</code><em class="property"> = 'day'</em><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.DAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.EPOCH">
+<code class="sig-name descname">EPOCH</code><em class="property"> = datetime.datetime(1970, 1, 1, 0, 0)</em><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.EPOCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.HOUR">
+<code class="sig-name descname">HOUR</code><em class="property"> = 'hour'</em><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.HOUR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.HUMAN_FUNCS">
+<code class="sig-name descname">HUMAN_FUNCS</code><em class="property"> = {'day': &lt;function Timestamps.&lt;lambda&gt;&gt;, 'hour': &lt;function Timestamps.&lt;lambda&gt;&gt;, 'month': &lt;function Timestamps.&lt;lambda&gt;&gt;, 'year': &lt;function Timestamps.&lt;lambda&gt;&gt;}</em><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.HUMAN_FUNCS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.MONTH">
+<code class="sig-name descname">MONTH</code><em class="property"> = 'month'</em><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.MONTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.YEAR">
+<code class="sig-name descname">YEAR</code><em class="property"> = 'year'</em><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.YEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.timestamps.Timestamps.to_human_string">
+<code class="sig-name descname">to_human_string</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.to_human_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.timestamps.Timestamps.to_human_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms.transform">
+<span id="iceberg-api-transforms-transform-module"></span><h2>iceberg.api.transforms.transform module<a class="headerlink" href="#module-iceberg.api.transforms.transform" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.transform.Transform">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.transform.</code><code class="sig-name descname">Transform</code><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform.Transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.transform.Transform.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform.Transform.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform.Transform.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform.Transform.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform.Transform.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform.Transform.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform.Transform.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform.Transform.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform.Transform.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform.Transform.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform.Transform.to_human_string">
+<code class="sig-name descname">to_human_string</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.to_human_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform.Transform.to_human_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms.transform_util">
+<span id="iceberg-api-transforms-transform-util-module"></span><h2>iceberg.api.transforms.transform_util module<a class="headerlink" href="#module-iceberg.api.transforms.transform_util" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.transform_util.</code><code class="sig-name descname">TransformUtil</code><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.EPOCH">
+<code class="sig-name descname">EPOCH</code><em class="property"> = datetime.datetime(1970, 1, 1, 0, 0)</em><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.EPOCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.EPOCH_YEAR">
+<code class="sig-name descname">EPOCH_YEAR</code><em class="property"> = 1970</em><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.EPOCH_YEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.base_64_encode">
+<em class="property">static </em><code class="sig-name descname">base_64_encode</code><span class="sig-paren">(</span><em class="sig-param">buffer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.base_64_encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.base_64_encode" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.diff_day">
+<em class="property">static </em><code class="sig-name descname">diff_day</code><span class="sig-paren">(</span><em class="sig-param">date1</em>, <em class="sig-param">date2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.diff_day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.diff_day" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.diff_hour">
+<em class="property">static </em><code class="sig-name descname">diff_hour</code><span class="sig-paren">(</span><em class="sig-param">date1</em>, <em class="sig-param">date2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.diff_hour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.diff_hour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.diff_month">
+<em class="property">static </em><code class="sig-name descname">diff_month</code><span class="sig-paren">(</span><em class="sig-param">date1</em>, <em class="sig-param">date2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.diff_month"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.diff_month" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.diff_year">
+<em class="property">static </em><code class="sig-name descname">diff_year</code><span class="sig-paren">(</span><em class="sig-param">date1</em>, <em class="sig-param">date2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.diff_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.diff_year" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.human_day">
+<em class="property">static </em><code class="sig-name descname">human_day</code><span class="sig-paren">(</span><em class="sig-param">day_ordinal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.human_day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.human_day" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.human_hour">
+<em class="property">static </em><code class="sig-name descname">human_hour</code><span class="sig-paren">(</span><em class="sig-param">hour_ordinal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.human_hour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.human_hour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.human_month">
+<em class="property">static </em><code class="sig-name descname">human_month</code><span class="sig-paren">(</span><em class="sig-param">month_ordinal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.human_month"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.human_month" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.human_time">
+<em class="property">static </em><code class="sig-name descname">human_time</code><span class="sig-paren">(</span><em class="sig-param">micros_from_midnight</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.human_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.human_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.human_timestamp_with_timezone">
+<em class="property">static </em><code class="sig-name descname">human_timestamp_with_timezone</code><span class="sig-paren">(</span><em class="sig-param">timestamp_micros</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.human_timestamp_with_timezone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.human_timestamp_with_timezone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.human_timestamp_without_timezone">
+<em class="property">static </em><code class="sig-name descname">human_timestamp_without_timezone</code><span class="sig-paren">(</span><em class="sig-param">timestamp_micros</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.human_timestamp_without_timezone"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.human_timestamp_without_timezone" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.human_year">
+<em class="property">static </em><code class="sig-name descname">human_year</code><span class="sig-paren">(</span><em class="sig-param">year_ordinal</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.human_year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.human_year" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transform_util.TransformUtil.unscale_decimal">
+<em class="property">static </em><code class="sig-name descname">unscale_decimal</code><span class="sig-paren">(</span><em class="sig-param">decimal_value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform_util.html#TransformUtil.unscale_decimal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transform_util.TransformUtil.unscale_decimal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms.transforms">
+<span id="iceberg-api-transforms-transforms-module"></span><h2>iceberg.api.transforms.transforms module<a class="headerlink" href="#module-iceberg.api.transforms.transforms" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.transforms.Transforms">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.transforms.</code><code class="sig-name descname">Transforms</code><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.transforms.Transforms.HAS_WIDTH">
+<code class="sig-name descname">HAS_WIDTH</code><em class="property"> = re.compile('(\\w+)\\[(\\d+)\\]')</em><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.HAS_WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transforms.Transforms.bucket">
+<em class="property">static </em><code class="sig-name descname">bucket</code><span class="sig-paren">(</span><em class="sig-param">type_var</em>, <em class="sig-param">num_buckets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.bucket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.bucket" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transforms.Transforms.day">
+<em class="property">static </em><code class="sig-name descname">day</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.day" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transforms.Transforms.from_string">
+<em class="property">static </em><code class="sig-name descname">from_string</code><span class="sig-paren">(</span><em class="sig-param">type</em>, <em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.from_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transforms.Transforms.hour">
+<em class="property">static </em><code class="sig-name descname">hour</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.hour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.hour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transforms.Transforms.identity">
+<em class="property">static </em><code class="sig-name descname">identity</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transforms.Transforms.month">
+<em class="property">static </em><code class="sig-name descname">month</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.month"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.month" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transforms.Transforms.truncate">
+<em class="property">static </em><code class="sig-name descname">truncate</code><span class="sig-paren">(</span><em class="sig-param">type_var</em>, <em class="sig-param">width</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.truncate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.transforms.Transforms.year">
+<em class="property">static </em><code class="sig-name descname">year</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.transforms.Transforms.year" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms.truncate">
+<span id="iceberg-api-transforms-truncate-module"></span><h2>iceberg.api.transforms.truncate module<a class="headerlink" href="#module-iceberg.api.transforms.truncate" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.truncate.Truncate">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.truncate.</code><code class="sig-name descname">Truncate</code><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.Truncate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.Truncate.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.Truncate.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.Truncate.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.Truncate.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.Truncate.get">
+<em class="property">static </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">type_var</em>, <em class="sig-param">width</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.Truncate.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.Truncate.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.Truncate.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.Truncate.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.Truncate.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.Truncate.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.Truncate.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.truncate.TruncateDecimal">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.truncate.</code><code class="sig-name descname">TruncateDecimal</code><span class="sig-paren">(</span><em class="sig-param">unscaled_width</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateDecimal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateDecimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.truncate.Truncate" title="iceberg.api.transforms.truncate.Truncate"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.truncate.Truncate</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateDecimal.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateDecimal.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateDecimal.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateDecimal.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateDecimal.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateDecimal.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateDecimal.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateDecimal.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateDecimal.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateDecimal.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateDecimal.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateDecimal.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.truncate.TruncateInteger">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.truncate.</code><code class="sig-name descname">TruncateInteger</code><span class="sig-paren">(</span><em class="sig-param">width</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateInteger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.truncate.Truncate" title="iceberg.api.transforms.truncate.Truncate"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.truncate.Truncate</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateInteger.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateInteger.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateInteger.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateInteger.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateInteger.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateInteger.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateInteger.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateInteger.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateInteger.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateInteger.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateInteger.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateInteger.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.truncate.TruncateLong">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.truncate.</code><code class="sig-name descname">TruncateLong</code><span class="sig-paren">(</span><em class="sig-param">width</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateLong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.truncate.Truncate" title="iceberg.api.transforms.truncate.Truncate"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.truncate.Truncate</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateLong.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateLong.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateLong.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateLong.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateLong.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateLong.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateLong.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateLong.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateLong.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateLong.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateLong.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateLong.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.truncate.TruncateString">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.truncate.</code><code class="sig-name descname">TruncateString</code><span class="sig-paren">(</span><em class="sig-param">length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.truncate.Truncate" title="iceberg.api.transforms.truncate.Truncate"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.truncate.Truncate</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateString.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateString.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateString.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateString.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateString.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateString.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateString.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateString.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateString.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.truncate.TruncateString.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#TruncateString.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.truncate.TruncateString.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-iceberg.api.transforms">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-iceberg.api.transforms" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="iceberg.api.transforms.Bucket">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">Bucket</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Bucket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Bucket.BUCKET_TYPE">
+<code class="sig-name descname">BUCKET_TYPE</code><em class="property"> = {&lt;TypeID.DATE: {'java_class': 'Integer.class', 'python_class': &lt;class 'int'&gt;, 'id': 6}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.INTEGER: {'java_class': 'Integer.class', 'python_class': &lt;class 'int'&gt;, 'id': 2}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.TIME: {'java_class': 'Long.class', 'python_class': &lt;class 'int'&gt;, 'id': 7}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.TIMESTAMP: {'java_class': 'Long.class', 'python_class': &lt;class 'int'&gt;, 'id': 8}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.LONG: {'java_class': 'Long.class', 'python_class': &lt;class 'int'&gt;, 'id': 3}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.DECIMAL: {'java_class': 'BigDecimal.class', 'python_class': &lt;class 'decimal.Decimal'&gt;, 'id': 13}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.STRING: {'java_class': 'CharSequence.class', 'python_class': &lt;class 'str'&gt;, 'id': 9}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.FIXED: {'java_class': 'ByteBuffer.class', 'python_class': &lt;class 'bytes'&gt;, 'id': 11}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.BINARY: {'java_class': 'ByteBuffer.class', 'python_class': &lt;class 'bytearray'&gt;, 'id': 12}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;, &lt;TypeID.UUID: {'java_class': 'java.util.UUID.class', 'python_class': &lt;class 'uuid.UUID'&gt;, 'id': 10}&gt;: &lt;function Bucket.&lt;lambda&gt;&gt;}</em><a class="headerlink" href="#iceberg.api.transforms.Bucket.BUCKET_TYPE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Bucket.MURMUR3">
+<code class="sig-name descname">MURMUR3</code><em class="property"> = &lt;module 'mmh3' from '/Users/tgooch/.pyenv/versions/3.6.9/envs/iceberg_dev_os/lib/python3.6/site-packages/mmh3.cpython-36m-darwin.so'&gt;</em><a class="headerlink" href="#iceberg.api.transforms.Bucket.MURMUR3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Bucket.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Bucket.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Bucket.get">
+<em class="property">static </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">type_var</em>, <em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Bucket.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Bucket.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Bucket.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Bucket.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Bucket.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Bucket.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Bucket.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Bucket.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#Bucket.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Bucket.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.BucketByteBuffer">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">BucketByteBuffer</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketByteBuffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketByteBuffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.BucketDecimal">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">BucketDecimal</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDecimal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketDecimal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketDecimal.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDecimal.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketDecimal.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketDecimal.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDecimal.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketDecimal.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.BucketDouble">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">BucketDouble</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDouble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketDouble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketDouble.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDouble.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketDouble.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketDouble.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketDouble.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketDouble.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.BucketFloat">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">BucketFloat</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketFloat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketFloat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketFloat.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketFloat.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketFloat.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketFloat.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketFloat.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketFloat.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.BucketInteger">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">BucketInteger</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketInteger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketInteger" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketInteger.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketInteger.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketInteger.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketInteger.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketInteger.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketInteger.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.BucketLong">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">BucketLong</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketLong"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketLong" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketLong.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketLong.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketLong.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketLong.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketLong.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketLong.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.BucketString">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">BucketString</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketString"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketString" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketString.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketString.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketString.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.BucketString.hash">
+<code class="sig-name descname">hash</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketString.hash"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketString.hash" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.BucketUUID">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">BucketUUID</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/bucket.html#BucketUUID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.BucketUUID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.bucket.Bucket" title="iceberg.api.transforms.bucket.Bucket"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.bucket.Bucket</span></code></a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.Dates">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">Dates</code><span class="sig-paren">(</span><em class="sig-param">granularity</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Dates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Dates.DAY">
+<code class="sig-name descname">DAY</code><em class="property"> = 'day'</em><a class="headerlink" href="#iceberg.api.transforms.Dates.DAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Dates.EPOCH">
+<code class="sig-name descname">EPOCH</code><em class="property"> = datetime.datetime(1970, 1, 1, 0, 0)</em><a class="headerlink" href="#iceberg.api.transforms.Dates.EPOCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Dates.HUMAN_FUNCS">
+<code class="sig-name descname">HUMAN_FUNCS</code><em class="property"> = {'day': &lt;function Dates.&lt;lambda&gt;&gt;, 'month': &lt;function Dates.&lt;lambda&gt;&gt;, 'year': &lt;function Dates.&lt;lambda&gt;&gt;}</em><a class="headerlink" href="#iceberg.api.transforms.Dates.HUMAN_FUNCS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Dates.MONTH">
+<code class="sig-name descname">MONTH</code><em class="property"> = 'month'</em><a class="headerlink" href="#iceberg.api.transforms.Dates.MONTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Dates.SECONDS_IN_DAY">
+<code class="sig-name descname">SECONDS_IN_DAY</code><em class="property"> = 86400</em><a class="headerlink" href="#iceberg.api.transforms.Dates.SECONDS_IN_DAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Dates.YEAR">
+<code class="sig-name descname">YEAR</code><em class="property"> = 'year'</em><a class="headerlink" href="#iceberg.api.transforms.Dates.YEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Dates.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">days</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Dates.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Dates.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Dates.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Dates.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Dates.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Dates.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Dates.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Dates.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Dates.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Dates.to_human_string">
+<code class="sig-name descname">to_human_string</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/dates.html#Dates.to_human_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Dates.to_human_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.Identity">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">Identity</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Identity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.Identity.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Identity.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Identity.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Identity.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Identity.get">
+<em class="property">static </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Identity.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Identity.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Identity.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Identity.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Identity.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Identity.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Identity.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Identity.to_human_string">
+<code class="sig-name descname">to_human_string</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/identity.html#Identity.to_human_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Identity.to_human_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.Timestamps">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">Timestamps</code><span class="sig-paren">(</span><em class="sig-param">granularity</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Timestamps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Timestamps.DAY">
+<code class="sig-name descname">DAY</code><em class="property"> = 'day'</em><a class="headerlink" href="#iceberg.api.transforms.Timestamps.DAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Timestamps.EPOCH">
+<code class="sig-name descname">EPOCH</code><em class="property"> = datetime.datetime(1970, 1, 1, 0, 0)</em><a class="headerlink" href="#iceberg.api.transforms.Timestamps.EPOCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Timestamps.HOUR">
+<code class="sig-name descname">HOUR</code><em class="property"> = 'hour'</em><a class="headerlink" href="#iceberg.api.transforms.Timestamps.HOUR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Timestamps.HUMAN_FUNCS">
+<code class="sig-name descname">HUMAN_FUNCS</code><em class="property"> = {'day': &lt;function Timestamps.&lt;lambda&gt;&gt;, 'hour': &lt;function Timestamps.&lt;lambda&gt;&gt;, 'month': &lt;function Timestamps.&lt;lambda&gt;&gt;, 'year': &lt;function Timestamps.&lt;lambda&gt;&gt;}</em><a class="headerlink" href="#iceberg.api.transforms.Timestamps.HUMAN_FUNCS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Timestamps.MONTH">
+<code class="sig-name descname">MONTH</code><em class="property"> = 'month'</em><a class="headerlink" href="#iceberg.api.transforms.Timestamps.MONTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Timestamps.YEAR">
+<code class="sig-name descname">YEAR</code><em class="property"> = 'year'</em><a class="headerlink" href="#iceberg.api.transforms.Timestamps.YEAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Timestamps.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Timestamps.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Timestamps.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Timestamps.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Timestamps.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Timestamps.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Timestamps.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Timestamps.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Timestamps.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Timestamps.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Timestamps.to_human_string">
+<code class="sig-name descname">to_human_string</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/timestamps.html#Timestamps.to_human_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Timestamps.to_human_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.Transform">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">Transform</code><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.Transform.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transform.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transform.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transform.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transform.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transform.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transform.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transform.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transform.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transform.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transform.to_human_string">
+<code class="sig-name descname">to_human_string</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transform.html#Transform.to_human_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transform.to_human_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.Transforms">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">Transforms</code><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="iceberg.api.transforms.Transforms.HAS_WIDTH">
+<code class="sig-name descname">HAS_WIDTH</code><em class="property"> = re.compile('(\\w+)\\[(\\d+)\\]')</em><a class="headerlink" href="#iceberg.api.transforms.Transforms.HAS_WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transforms.bucket">
+<em class="property">static </em><code class="sig-name descname">bucket</code><span class="sig-paren">(</span><em class="sig-param">type_var</em>, <em class="sig-param">num_buckets</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.bucket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms.bucket" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transforms.day">
+<em class="property">static </em><code class="sig-name descname">day</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms.day" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transforms.from_string">
+<em class="property">static </em><code class="sig-name descname">from_string</code><span class="sig-paren">(</span><em class="sig-param">type</em>, <em class="sig-param">transform</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.from_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms.from_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transforms.hour">
+<em class="property">static </em><code class="sig-name descname">hour</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.hour"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms.hour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transforms.identity">
+<em class="property">static </em><code class="sig-name descname">identity</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.identity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms.identity" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transforms.month">
+<em class="property">static </em><code class="sig-name descname">month</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.month"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms.month" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transforms.truncate">
+<em class="property">static </em><code class="sig-name descname">truncate</code><span class="sig-paren">(</span><em class="sig-param">type_var</em>, <em class="sig-param">width</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms.truncate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Transforms.year">
+<em class="property">static </em><code class="sig-name descname">year</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/transforms.html#Transforms.year"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Transforms.year" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="iceberg.api.transforms.Truncate">
+<em class="property">class </em><code class="sig-prename descclassname">iceberg.api.transforms.</code><code class="sig-name descname">Truncate</code><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Truncate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#iceberg.api.transforms.transform.Transform" title="iceberg.api.transforms.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">iceberg.api.transforms.transform.Transform</span></code></a></p>
+<dl class="method">
+<dt id="iceberg.api.transforms.Truncate.apply">
+<code class="sig-name descname">apply</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Truncate.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Truncate.can_transform">
+<code class="sig-name descname">can_transform</code><span class="sig-paren">(</span><em class="sig-param">type_var</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.can_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Truncate.can_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Truncate.get">
+<em class="property">static </em><code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">type_var</em>, <em class="sig-param">width</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Truncate.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Truncate.get_result_type">
+<code class="sig-name descname">get_result_type</code><span class="sig-paren">(</span><em class="sig-param">source_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.get_result_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Truncate.get_result_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Truncate.project">
+<code class="sig-name descname">project</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Truncate.project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="iceberg.api.transforms.Truncate.project_strict">
+<code class="sig-name descname">project_strict</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">predicate</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/iceberg/api/transforms/truncate.html#Truncate.project_strict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#iceberg.api.transforms.Truncate.project_strict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="iceberg.api.types.html" class="btn btn-neutral float-right" title="iceberg.api.types package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="iceberg.api.io.html" class="btn btn-neutral float-left" title="iceberg.api.io package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

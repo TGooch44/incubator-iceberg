@@ -1,0 +1,303 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.api.expressions.projections &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.api.expressions.projections</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.api.expressions.projections</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+
+<span class="kn">from</span> <span class="nn">.expressions</span> <span class="k">import</span> <span class="n">Expressions</span><span class="p">,</span> <span class="n">ExpressionVisitors</span><span class="p">,</span> <span class="n">RewriteNot</span>
+<span class="kn">from</span> <span class="nn">.predicate</span> <span class="k">import</span> <span class="n">BoundPredicate</span><span class="p">,</span> <span class="n">UnboundPredicate</span>
+
+
+<div class="viewcode-block" id="inclusive"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.inclusive">[docs]</a><span class="k">def</span> <span class="nf">inclusive</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">InclusiveProjection</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="strict"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.strict">[docs]</a><span class="k">def</span> <span class="nf">strict</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">StrictProjection</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProjectionEvaluator"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.ProjectionEvaluator">[docs]</a><span class="k">class</span> <span class="nc">ProjectionEvaluator</span><span class="p">(</span><span class="n">ExpressionVisitors</span><span class="o">.</span><span class="n">ExpressionVisitor</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ProjectionEvaluator.project"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.ProjectionEvaluator.project">[docs]</a>    <span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="BaseProjectionEvaluator"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.BaseProjectionEvaluator">[docs]</a><span class="k">class</span> <span class="nc">BaseProjectionEvaluator</span><span class="p">(</span><span class="n">ProjectionEvaluator</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span> <span class="o">=</span> <span class="n">case_sensitive</span>
+
+<div class="viewcode-block" id="BaseProjectionEvaluator.project"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.BaseProjectionEvaluator.project">[docs]</a>    <span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">expr</span><span class="p">):</span>
+        <span class="c1"># projections assume that there are no NOT nodes in the expression tree. to ensure that this</span>
+        <span class="c1"># is the case, the expression is rewritten to push all NOT nodes down to the expression</span>
+        <span class="c1"># leaf nodes.</span>
+        <span class="c1"># this is necessary to ensure that the default expression returned when a predicate can&#39;t be</span>
+        <span class="c1"># projected is correct.</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="n">ExpressionVisitors</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">ExpressionVisitors</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">RewriteNot</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProjectionEvaluator.always_true"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.BaseProjectionEvaluator.always_true">[docs]</a>    <span class="k">def</span> <span class="nf">always_true</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expressions</span><span class="o">.</span><span class="n">always_true</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseProjectionEvaluator.always_false"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.BaseProjectionEvaluator.always_false">[docs]</a>    <span class="k">def</span> <span class="nf">always_false</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expressions</span><span class="o">.</span><span class="n">always_false</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseProjectionEvaluator.not_"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.BaseProjectionEvaluator.not_">[docs]</a>    <span class="k">def</span> <span class="nf">not_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;[BUG] project called on expression with a not&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProjectionEvaluator.and_"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.BaseProjectionEvaluator.and_">[docs]</a>    <span class="k">def</span> <span class="nf">and_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_result</span><span class="p">,</span> <span class="n">right_result</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expressions</span><span class="o">.</span><span class="n">and_</span><span class="p">(</span><span class="n">left_result</span><span class="p">,</span> <span class="n">right_result</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProjectionEvaluator.or_"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.BaseProjectionEvaluator.or_">[docs]</a>    <span class="k">def</span> <span class="nf">or_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left_result</span><span class="p">,</span> <span class="n">right_result</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Expressions</span><span class="o">.</span><span class="n">or_</span><span class="p">(</span><span class="n">left_result</span><span class="p">,</span> <span class="n">right_result</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProjectionEvaluator.predicate"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.BaseProjectionEvaluator.predicate">[docs]</a>    <span class="k">def</span> <span class="nf">predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+        <span class="n">bound</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">as_struct</span><span class="p">(),</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bound</span><span class="p">,</span> <span class="n">BoundPredicate</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">predicate</span><span class="p">(</span><span class="n">bound</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bound</span></div></div>
+
+
+<div class="viewcode-block" id="InclusiveProjection"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.InclusiveProjection">[docs]</a><span class="k">class</span> <span class="nc">InclusiveProjection</span><span class="p">(</span><span class="n">BaseProjectionEvaluator</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InclusiveProjection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span>
+                                                  <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">)</span>
+
+<div class="viewcode-block" id="InclusiveProjection.predicate"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.InclusiveProjection.predicate">[docs]</a>    <span class="k">def</span> <span class="nf">predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">UnboundPredicate</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">InclusiveProjection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predicate</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+
+        <span class="n">part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">get_field_by_source_id</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">field_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">part</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_true</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_true</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="StrictProjection"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.StrictProjection">[docs]</a><span class="k">class</span> <span class="nc">StrictProjection</span><span class="p">(</span><span class="n">BaseProjectionEvaluator</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StrictProjection</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StrictProjection.predicate"><a class="viewcode-back" href="../../../../iceberg.api.expressions.html#iceberg.api.expressions.projections.StrictProjection.predicate">[docs]</a>    <span class="k">def</span> <span class="nf">predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">get_field_by_source_id</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">ref</span><span class="o">.</span><span class="n">field_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">part</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_false</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">part</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">project_strict</span><span class="p">(</span><span class="n">part</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">always_false</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

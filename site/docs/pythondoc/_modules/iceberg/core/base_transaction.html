@@ -1,0 +1,365 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.core.base_transaction &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.core.base_transaction</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.core.base_transaction</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+
+<span class="kn">import</span> <span class="nn">enum</span>
+
+
+<span class="kn">from</span> <span class="nn">iceberg.api</span> <span class="k">import</span> <span class="p">(</span><span class="n">Table</span><span class="p">,</span>
+                         <span class="n">Transaction</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">iceberg.core</span> <span class="k">import</span> <span class="n">TableOperations</span>
+<span class="kn">from</span> <span class="nn">iceberg.exceptions</span> <span class="k">import</span> <span class="n">CommitFailedException</span>
+
+
+<div class="viewcode-block" id="BaseTransaction"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.BaseTransaction">[docs]</a><span class="k">class</span> <span class="nc">BaseTransaction</span><span class="p">(</span><span class="n">Transaction</span><span class="p">):</span>
+
+<div class="viewcode-block" id="BaseTransaction.replace_table_transaction"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.BaseTransaction.replace_table_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">replace_table_transaction</span><span class="p">(</span><span class="n">ops</span><span class="p">,</span> <span class="n">start</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">BaseTransaction</span><span class="p">(</span><span class="n">ops</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseTransaction.create_table_transaction"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.BaseTransaction.create_table_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">create_table_transaction</span><span class="p">(</span><span class="n">ops</span><span class="p">,</span> <span class="n">start</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ops</span><span class="o">.</span><span class="n">current</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot start create table transaction: table already exists&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseTransaction.new_transaction"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.BaseTransaction.new_transaction">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">new_transaction</span><span class="p">(</span><span class="n">ops</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">BaseTransaction</span><span class="p">(</span><span class="n">ops</span><span class="p">,</span> <span class="n">ops</span><span class="o">.</span><span class="n">refesh</span><span class="p">())</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ops</span><span class="p">,</span> <span class="n">start</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ops</span> <span class="o">=</span> <span class="n">ops</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intermediate_snapshot_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">current</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">TransactionType</span><span class="o">.</span><span class="n">CREATE_TABLE</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">TransactionType</span><span class="o">.</span><span class="n">REPLACE_TABLE</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">TransactionType</span><span class="o">.</span><span class="n">SIMPLE</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_base</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transaction_table</span> <span class="o">=</span> <span class="n">TransactionTable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transaction_ops</span> <span class="o">=</span> <span class="n">TransactionTableOperations</span>
+
+<div class="viewcode-block" id="BaseTransaction.table"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.BaseTransaction.table">[docs]</a>    <span class="k">def</span> <span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transaction_table</span></div>
+
+<div class="viewcode-block" id="BaseTransaction.check_last_operation_commited"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.BaseTransaction.check_last_operation_commited">[docs]</a>    <span class="k">def</span> <span class="nf">check_last_operation_commited</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_base</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot create new </span><span class="si">%s</span><span class="s2">: last operation has not committed&quot;</span> <span class="o">%</span> <span class="n">operation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span></div>
+
+<div class="viewcode-block" id="BaseTransaction.update_schema"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.BaseTransaction.update_schema">[docs]</a>    <span class="k">def</span> <span class="nf">update_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_last_operation_commited</span><span class="p">(</span><span class="s2">&quot;UpdateSchema&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseTransaction.current_id"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.BaseTransaction.current_id">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">current_id</span><span class="p">(</span><span class="n">meta</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">meta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">meta</span><span class="o">.</span><span class="n">current_snapshot</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">meta</span><span class="o">.</span><span class="n">current_snapshot</span><span class="p">()</span><span class="o">.</span><span class="n">snapshot_id</span></div></div>
+
+
+<div class="viewcode-block" id="TransactionType"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionType">[docs]</a><span class="k">class</span> <span class="nc">TransactionType</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+
+    <span class="n">CREATE_TABLE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">REPLACE_TABLE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">SIMPLE</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="TransactionTableOperations"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTableOperations">[docs]</a><span class="k">class</span> <span class="nc">TransactionTableOperations</span><span class="p">(</span><span class="n">TableOperations</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bt</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bt</span> <span class="o">=</span> <span class="n">bt</span>
+
+<div class="viewcode-block" id="TransactionTableOperations.current"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTableOperations.current">[docs]</a>    <span class="k">def</span> <span class="nf">current</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bt</span><span class="o">.</span><span class="n">current</span></div>
+
+<div class="viewcode-block" id="TransactionTableOperations.refresh"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTableOperations.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bt</span><span class="o">.</span><span class="n">current</span></div>
+
+<div class="viewcode-block" id="TransactionTableOperations.commit"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTableOperations.commit">[docs]</a>    <span class="k">def</span> <span class="nf">commit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">base</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">CommitFailedException</span><span class="p">(</span><span class="s2">&quot;Table metadata refresh is required&quot;</span><span class="p">)</span>
+
+        <span class="n">old_id</span> <span class="o">=</span> <span class="n">BaseTransaction</span><span class="o">.</span><span class="n">current_id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bt</span><span class="o">.</span><span class="n">current</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">old_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">old_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">BaseTransaction</span><span class="o">.</span><span class="n">current_id</span><span class="p">(</span><span class="n">metadata</span><span class="p">),</span>
+                                                 <span class="n">BaseTransaction</span><span class="o">.</span><span class="n">current_id</span><span class="p">(</span><span class="n">base</span><span class="p">)):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bt</span><span class="o">.</span><span class="n">intermediate_snapshot_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">old_id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bt</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">metadata</span></div>
+
+<div class="viewcode-block" id="TransactionTableOperations.io"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTableOperations.io">[docs]</a>    <span class="k">def</span> <span class="nf">io</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bt</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">io</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTableOperations.metadata_file_location"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTableOperations.metadata_file_location">[docs]</a>    <span class="k">def</span> <span class="nf">metadata_file_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bt</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">metadata_file_location</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransactionTableOperations.new_snapshot_id"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTableOperations.new_snapshot_id">[docs]</a>    <span class="k">def</span> <span class="nf">new_snapshot_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bt</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">new_snapshot_id</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="TransactionTable"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable">[docs]</a><span class="k">class</span> <span class="nc">TransactionTable</span><span class="p">(</span><span class="n">Table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bt</span><span class="p">,</span> <span class="n">current</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bt</span> <span class="o">=</span> <span class="n">bt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="n">current</span>
+
+<div class="viewcode-block" id="TransactionTable.refresh"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.refresh">[docs]</a>    <span class="k">def</span> <span class="nf">refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TransactionTable.new_scan"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.new_scan">[docs]</a>    <span class="k">def</span> <span class="nf">new_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Transaction tables do not support scans&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransactionTable.schema"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.schema">[docs]</a>    <span class="k">def</span> <span class="nf">schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">schema</span></div>
+
+<div class="viewcode-block" id="TransactionTable.spec"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.spec">[docs]</a>    <span class="k">def</span> <span class="nf">spec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">spec</span></div>
+
+<div class="viewcode-block" id="TransactionTable.properties"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.properties">[docs]</a>    <span class="k">def</span> <span class="nf">properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">properties</span></div>
+
+<div class="viewcode-block" id="TransactionTable.location"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.location">[docs]</a>    <span class="k">def</span> <span class="nf">location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">location</span></div>
+
+<div class="viewcode-block" id="TransactionTable.current_snapshot"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.current_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">current_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">current_snapshot</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.snapshots"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.snapshots">[docs]</a>    <span class="k">def</span> <span class="nf">snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">snapshots</span></div>
+
+<div class="viewcode-block" id="TransactionTable.update_schema"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.update_schema">[docs]</a>    <span class="k">def</span> <span class="nf">update_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">update_schema</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.update_properties"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.update_properties">[docs]</a>    <span class="k">def</span> <span class="nf">update_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">update_properties</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.update_location"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.update_location">[docs]</a>    <span class="k">def</span> <span class="nf">update_location</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">update_location</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.new_append"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.new_append">[docs]</a>    <span class="k">def</span> <span class="nf">new_append</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">new_append</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.new_rewrite"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.new_rewrite">[docs]</a>    <span class="k">def</span> <span class="nf">new_rewrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">new_rewrite</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.new_overwrite"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.new_overwrite">[docs]</a>    <span class="k">def</span> <span class="nf">new_overwrite</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">new_overwrite</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.new_replace_partitions"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.new_replace_partitions">[docs]</a>    <span class="k">def</span> <span class="nf">new_replace_partitions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">new_replace_partitions</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.new_delete"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.new_delete">[docs]</a>    <span class="k">def</span> <span class="nf">new_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">new_delete</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.expire_snapshots"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.expire_snapshots">[docs]</a>    <span class="k">def</span> <span class="nf">expire_snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bt</span><span class="o">.</span><span class="n">expire_snapshots</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TransactionTable.rollback"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.rollback">[docs]</a>    <span class="k">def</span> <span class="nf">rollback</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Transaction tables do not support rollback&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TransactionTable.new_transaction"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.base_transaction.TransactionTable.new_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">new_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot create a transaction within a transaction&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>iceberg.core.data_table_scan &mdash; Iceberg 0.3.20 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Iceberg
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.api.html">iceberg.api package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../iceberg.core.html">iceberg.core package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Iceberg</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>iceberg.core.data_table_scan</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for iceberg.core.data_table_scan</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Licensed to the Apache Software Foundation (ASF) under one</span>
+<span class="c1"># or more contributor license agreements.  See the NOTICE file</span>
+<span class="c1"># distributed with this work for additional information</span>
+<span class="c1"># regarding copyright ownership.  The ASF licenses this file</span>
+<span class="c1"># to you under the Apache License, Version 2.0 (the</span>
+<span class="c1"># &quot;License&quot;); you may not use this file except in compliance</span>
+<span class="c1"># with the License.  You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#   http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing,</span>
+<span class="c1"># software distributed under the License is distributed on an</span>
+<span class="c1"># &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span>
+<span class="c1"># KIND, either express or implied.  See the License for the</span>
+<span class="c1"># specific language governing permissions and limitations</span>
+<span class="c1"># under the License.</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="k">import</span> <span class="n">cpu_count</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.dummy</span> <span class="k">import</span> <span class="n">Pool</span>
+
+<span class="kn">from</span> <span class="nn">iceberg.api.expressions</span> <span class="k">import</span> <span class="p">(</span><span class="n">InclusiveManifestEvaluator</span><span class="p">,</span>
+                                     <span class="n">ResidualEvaluator</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.base_file_scan_task</span> <span class="k">import</span> <span class="n">BaseFileScanTask</span>
+<span class="kn">from</span> <span class="nn">.base_table_scan</span> <span class="k">import</span> <span class="n">BaseTableScan</span>
+<span class="kn">from</span> <span class="nn">.manifest_reader</span> <span class="k">import</span> <span class="n">ManifestReader</span>
+<span class="kn">from</span> <span class="nn">.partition_spec_parser</span> <span class="k">import</span> <span class="n">PartitionSpecParser</span>
+<span class="kn">from</span> <span class="nn">.schema_parser</span> <span class="k">import</span> <span class="n">SchemaParser</span>
+<span class="kn">from</span> <span class="nn">.table_properties</span> <span class="k">import</span> <span class="n">TableProperties</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="k">import</span> <span class="n">SCAN_THREAD_POOL_ENABLED</span><span class="p">,</span> <span class="n">WORKER_THREAD_POOL_SIZE_PROP</span>
+
+
+<span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DataTableScan"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.data_table_scan.DataTableScan">[docs]</a><span class="k">class</span> <span class="nc">DataTableScan</span><span class="p">(</span><span class="n">BaseTableScan</span><span class="p">):</span>
+
+    <span class="n">SNAPSHOT_COLUMNS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;snapshot_id&quot;</span><span class="p">,</span> <span class="s2">&quot;file_path&quot;</span><span class="p">,</span> <span class="s2">&quot;file_ordinal&quot;</span><span class="p">,</span> <span class="s2">&quot;file_format&quot;</span><span class="p">,</span> <span class="s2">&quot;block_size_in_bytes&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;file_size_in_bytes&quot;</span><span class="p">,</span> <span class="s2">&quot;record_count&quot;</span><span class="p">,</span> <span class="s2">&quot;partition&quot;</span><span class="p">,</span> <span class="s2">&quot;value_counts&quot;</span><span class="p">,</span> <span class="s2">&quot;null_value_counts&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;lower_bounds&quot;</span><span class="p">,</span> <span class="s2">&quot;upper_bounds&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ops</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">row_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">selected_columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minused_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DataTableScan</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ops</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">schema</span> <span class="k">if</span> <span class="n">schema</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">table</span><span class="o">.</span><span class="n">schema</span><span class="p">(),</span>
+                                            <span class="n">snapshot_id</span><span class="o">=</span><span class="n">snapshot_id</span><span class="p">,</span> <span class="n">row_filter</span><span class="o">=</span><span class="n">row_filter</span><span class="p">,</span>
+                                            <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">,</span> <span class="n">selected_columns</span><span class="o">=</span><span class="n">selected_columns</span><span class="p">,</span>
+                                            <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="n">minused_cols</span><span class="o">=</span><span class="n">minused_cols</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cached_evaluators</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DataTableScan.new_refined_scan"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.data_table_scan.DataTableScan.new_refined_scan">[docs]</a>    <span class="k">def</span> <span class="nf">new_refined_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ops</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span> <span class="n">snapshot_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">row_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">selected_columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minused_cols</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">DataTableScan</span><span class="p">(</span><span class="n">ops</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">schema</span><span class="p">,</span>
+                             <span class="n">snapshot_id</span><span class="o">=</span><span class="n">snapshot_id</span><span class="p">,</span> <span class="n">row_filter</span><span class="o">=</span><span class="n">row_filter</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="n">case_sensitive</span><span class="p">,</span>
+                             <span class="n">selected_columns</span><span class="o">=</span><span class="n">selected_columns</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="n">minused_cols</span><span class="o">=</span><span class="n">minused_cols</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataTableScan.plan_files"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.data_table_scan.DataTableScan.plan_files">[docs]</a>    <span class="k">def</span> <span class="nf">plan_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ops</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">snapshot</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">row_filter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">i</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ops</span><span class="p">,</span> <span class="n">snapshot</span><span class="p">,</span> <span class="n">row_filter</span><span class="p">]):</span>
+            <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">DataTableScan</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">plan_files</span><span class="p">()</span>
+
+        <span class="n">matching_manifests</span> <span class="o">=</span> <span class="p">[</span><span class="n">manifest</span> <span class="k">for</span> <span class="n">manifest</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="o">.</span><span class="n">manifests</span>
+                              <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cache_loader</span><span class="p">(</span><span class="n">manifest</span><span class="o">.</span><span class="n">spec_id</span><span class="p">)</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">manifest</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">SCAN_THREAD_POOL_ENABLED</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">Pool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">conf</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">WORKER_THREAD_POOL_SIZE_PROP</span><span class="p">,</span>
+                                        <span class="n">cpu_count</span><span class="p">()))</span> <span class="k">as</span> <span class="n">reader_scan_pool</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">([</span><span class="n">scan</span> <span class="k">for</span> <span class="n">scan</span>
+                                                      <span class="ow">in</span> <span class="n">reader_scan_pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_scans_for_manifest</span><span class="p">,</span>
+                                                                              <span class="n">matching_manifests</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">get_scans_for_manifest</span><span class="p">(</span><span class="n">manifest</span><span class="p">)</span>
+                                                  <span class="k">for</span> <span class="n">manifest</span> <span class="ow">in</span> <span class="n">matching_manifests</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DataTableScan.cache_loader"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.data_table_scan.DataTableScan.cache_loader">[docs]</a>    <span class="k">def</span> <span class="nf">cache_loader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec_id</span><span class="p">):</span>
+        <span class="n">spec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">current</span><span class="p">()</span><span class="o">.</span><span class="n">spec_id</span><span class="p">(</span><span class="n">spec_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">InclusiveManifestEvaluator</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_filter</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataTableScan.get_scans_for_manifest"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.data_table_scan.DataTableScan.get_scans_for_manifest">[docs]</a>    <span class="k">def</span> <span class="nf">get_scans_for_manifest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manifest</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">.filesystem</span> <span class="k">import</span> <span class="n">FileSystemInputFile</span>
+        <span class="n">input_file</span> <span class="o">=</span> <span class="n">FileSystemInputFile</span><span class="o">.</span><span class="n">from_location</span><span class="p">(</span><span class="n">manifest</span><span class="o">.</span><span class="n">manifest_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">conf</span><span class="p">)</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">ManifestReader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="n">schema_str</span> <span class="o">=</span> <span class="n">SchemaParser</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">schema</span><span class="p">)</span>
+        <span class="n">spec_str</span> <span class="o">=</span> <span class="n">PartitionSpecParser</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
+        <span class="n">residuals</span> <span class="o">=</span> <span class="n">ResidualEvaluator</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">row_filter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">BaseFileScanTask</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">schema_str</span><span class="p">,</span> <span class="n">spec_str</span><span class="p">,</span> <span class="n">residuals</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">filter_rows</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">row_filter</span><span class="p">)</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">BaseTableScan</span><span class="o">.</span><span class="n">SNAPSHOT_COLUMNS</span><span class="p">)</span><span class="o">.</span><span class="n">iterator</span><span class="p">()]</span></div>
+
+<div class="viewcode-block" id="DataTableScan.target_split_size"><a class="viewcode-back" href="../../../iceberg.core.html#iceberg.core.data_table_scan.DataTableScan.target_split_size">[docs]</a>    <span class="k">def</span> <span class="nf">target_split_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ops</span><span class="p">):</span>
+        <span class="n">scan_split_size_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">TableProperties</span><span class="o">.</span><span class="n">SPLIT_SIZE</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">scan_split_size_str</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">scan_split_size_str</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Invalid </span><span class="si">%s</span><span class="s2"> option: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">TableProperties</span><span class="o">.</span><span class="n">SPLIT_SIZE</span><span class="p">,</span> <span class="n">scan_split_size_str</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">current</span><span class="p">()</span><span class="o">.</span><span class="n">properties</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">TableProperties</span><span class="o">.</span><span class="n">SPLIT_SIZE</span><span class="p">,</span> <span class="n">TableProperties</span><span class="o">.</span><span class="n">SPLIT_SIZE_DEFAULT</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Apache Foundation
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
